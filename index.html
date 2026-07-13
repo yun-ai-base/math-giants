@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>数学史上的二十位巨人 · 可视化图谱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0c0e12;
+    --ink-2:#11141b;
+    --panel:rgba(255,255,255,0.045);
+    --panel-2:rgba(255,255,255,0.07);
+    --line:rgba(200,169,106,0.22);
+    --gold:#c8a96a;
+    --gold-soft:#e6cf9c;
+    --gold-dim:rgba(200,169,106,0.55);
+    --cream:#ece7dc;
+    --muted:#969cab;
+    --muted-2:#6f7480;
+    --tier1:#d8b56b;
+    --tier2:#b9c2cf;
+    --tier3:#c8a96a;
+    --tier4:#9fb8a6;
+    --shadow:0 24px 60px -28px rgba(0,0,0,0.85);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(200,169,106,0.10), transparent 60%),
+      radial-gradient(900px 600px at 0% 100%, rgba(120,140,180,0.08), transparent 55%),
+      var(--ink);
+    color:var(--cream);
+    font-family:"Noto Sans SC",-apple-system,"Segoe UI",sans-serif;
+    font-weight:300;
+    letter-spacing:0.02em;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  ::selection{background:rgba(200,169,106,0.3);color:#fff;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 26px 90px;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:74px 0 40px;text-align:center;}
+  .hero .kicker{
+    font-family:"Cormorant Garamond",serif;
+    letter-spacing:0.42em;text-transform:uppercase;
+    color:var(--gold);font-size:14px;font-weight:600;margin-bottom:18px;
+  }
+  .hero h1{
+    font-family:"Noto Serif SC","Cormorant Garamond",serif;
+    font-weight:700;font-size:clamp(34px,5.4vw,62px);
+    line-height:1.12;color:var(--cream);
+    text-shadow:0 2px 30px rgba(200,169,106,0.18);
+  }
+  .hero h1 .accent{
+    background:linear-gradient(120deg,var(--gold-soft),var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.sub{
+    margin:18px auto 0;max-width:680px;color:var(--muted);
+    font-size:15px;font-weight:300;
+  }
+  .stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px;}
+  .stat{
+    border:1px solid var(--line);border-radius:14px;
+    padding:14px 22px;min-width:128px;background:var(--panel);
+    backdrop-filter:blur(6px);
+  }
+  .stat b{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;color:var(--gold-soft);font-weight:700;line-height:1;}
+  .stat span{font-size:12px;color:var(--muted);letter-spacing:0.16em;}
+
+  /* ---------- TOOLBAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:30;
+    display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+    padding:16px 18px;margin:30px 0 26px;
+    background:rgba(12,14,18,0.72);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:16px;
+  }
+  .search{
+    flex:1 1 240px;display:flex;align-items:center;gap:9px;
+    background:var(--panel);border:1px solid var(--line);border-radius:11px;
+    padding:10px 14px;
+  }
+  .search svg{width:16px;height:16px;stroke:var(--gold);opacity:0.8;}
+  .search input{
+    background:transparent;border:0;outline:0;color:var(--cream);
+    font-family:inherit;font-size:14px;width:100%;
+  }
+  .search input::placeholder{color:var(--muted-2);}
+  select{
+    background:var(--panel);color:var(--cream);border:1px solid var(--line);
+    border-radius:11px;padding:10px 14px;font-family:inherit;font-size:13px;
+    outline:0;cursor:pointer;
+  }
+  select option{background:var(--ink-2);color:var(--cream);}
+  .seg{display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;}
+  .seg button{
+    background:transparent;color:var(--muted);border:0;padding:10px 16px;
+    font-family:inherit;font-size:13px;cursor:pointer;transition:.2s;
+  }
+  .seg button.on{background:linear-gradient(120deg,rgba(200,169,106,0.22),rgba(200,169,106,0.1));color:var(--gold-soft);}
+
+  /* ---------- GRID ---------- */
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));
+    gap:20px;
+  }
+  .card{
+    position:relative;border:1px solid var(--line);border-radius:18px;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    padding:22px 20px 20px;cursor:pointer;overflow:hidden;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;
+    background:radial-gradient(360px 200px at 50% -20%,rgba(200,169,106,0.16),transparent 70%);
+    opacity:0;transition:opacity .35s;
+  }
+  .card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--gold-dim);}
+  .card:hover::before{opacity:1;}
+  .portrait{
+    width:96px;height:120px;border-radius:12px;object-fit:cover;
+    border:1px solid var(--gold-dim);
+    box-shadow:0 10px 26px -12px rgba(0,0,0,0.8),inset 0 0 0 1px rgba(255,255,255,0.04);
+    background:#1a1d24;display:block;margin:0 auto 14px;
+  }
+  .rank{
+    position:absolute;top:14px;left:14px;font-family:"Cormorant Garamond",serif;
+    font-size:13px;color:var(--gold);border:1px solid var(--line);
+    border-radius:8px;padding:2px 8px;background:rgba(0,0,0,0.3);letter-spacing:0.1em;
+  }
+  .tier-flag{position:absolute;top:14px;right:14px;font-size:11px;letter-spacing:0.12em;padding:3px 9px;border-radius:8px;border:1px solid var(--line);}
+  .card h3{font-family:"Noto Serif SC",serif;font-weight:700;font-size:19px;text-align:center;margin-top:2px;}
+  .card .en{text-align:center;color:var(--muted);font-size:12px;font-style:italic;font-family:"Cormorant Garamond",serif;letter-spacing:0.04em;margin-top:2px;}
+  .card .years{text-align:center;color:var(--gold-soft);font-size:12.5px;margin-top:6px;font-family:"Cormorant Garamond",serif;font-weight:600;}
+  .card .tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px;}
+  .tag{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:3px 10px;background:rgba(255,255,255,0.02);}
+  .card .hl{margin-top:13px;font-size:12.5px;color:var(--cream);opacity:0.86;text-align:center;min-height:38px;}
+
+  /* ---------- TIMELINE VIEW ---------- */
+  .timeline{position:relative;margin-top:6px;padding-left:8px;}
+  .timeline::before{content:"";position:absolute;left:18px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--gold-dim),transparent);}
+  .tl-item{position:relative;display:flex;gap:20px;padding:14px 0 14px 52px;cursor:pointer;border-radius:12px;transition:.2s;}
+  .tl-item:hover{background:var(--panel);}
+  .tl-dot{position:absolute;left:11px;top:26px;width:16px;height:16px;border-radius:50%;background:var(--ink);border:2px solid var(--gold);box-shadow:0 0 0 4px rgba(200,169,106,0.12);}
+  .tl-thumb{width:54px;height:68px;border-radius:8px;object-fit:cover;border:1px solid var(--gold-dim);flex:none;background:#1a1d24;}
+  .tl-body h4{font-family:"Noto Serif SC",serif;font-size:16px;font-weight:700;}
+  .tl-body .y{color:var(--gold-soft);font-family:"Cormorant Garamond",serif;font-size:13px;margin-left:8px;}
+  .tl-body p{color:var(--muted);font-size:13px;margin-top:3px;}
+
+  /* ---------- MODAL ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(6,7,10,0.74);backdrop-filter:blur(8px);
+    z-index:100;opacity:0;pointer-events:none;transition:opacity .35s;
+    display:flex;justify-content:center;align-items:flex-start;padding:40px 18px;overflow-y:auto;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .modal{
+    position:relative;
+    width:min(960px,100%);background:linear-gradient(180deg,#14171f,#0e1116);
+    border:1px solid var(--gold-dim);border-radius:22px;overflow:hidden;
+    box-shadow:0 40px 120px -30px rgba(0,0,0,0.95);transform:translateY(18px);transition:transform .4s;
+    margin-bottom:40px;
+  }
+  .overlay.open .modal{transform:translateY(0);}
+  .m-hero{position:relative;display:flex;gap:26px;padding:34px 34px 26px;align-items:center;
+    background:radial-gradient(700px 240px at 18% 0%,rgba(200,169,106,0.16),transparent 70%);border-bottom:1px solid var(--line);}
+  .m-portrait{width:128px;height:160px;border-radius:14px;object-fit:cover;border:1px solid var(--gold-dim);box-shadow:0 18px 40px -18px rgba(0,0,0,0.9);flex:none;background:#1a1d24;}
+  .m-head h2{font-family:"Noto Serif SC",serif;font-size:30px;font-weight:700;line-height:1.1;}
+  .m-head .en{color:var(--muted);font-style:italic;font-family:"Cormorant Garamond",serif;font-size:16px;margin-top:3px;}
+  .m-head .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .m-head .meta span{font-size:12px;color:var(--gold-soft);border:1px solid var(--line);border-radius:20px;padding:3px 11px;background:rgba(255,255,255,0.02);}
+  .m-close{position:absolute;top:18px;right:20px;z-index:5;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(0,0,0,0.45);color:var(--cream);font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;}
+  .m-close:hover{border-color:var(--gold);color:var(--gold-soft);transform:rotate(90deg);}
+  .m-body{padding:8px 34px 34px;}
+  .sec{margin-top:26px;}
+  .sec-h{display:flex;align-items:center;gap:10px;margin-bottom:13px;}
+  .sec-h .n{font-family:"Cormorant Garamond",serif;color:var(--gold);font-size:14px;letter-spacing:0.2em;}
+  .sec-h h3{font-family:"Noto Serif SC",serif;font-size:17px;font-weight:700;color:var(--gold-soft);}
+  .sec-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);}
+  .sec p{color:#d6d2c8;font-size:14.5px;font-weight:300;}
+
+  .cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){.cv-grid{grid-template-columns:1fr;}.m-hero{flex-direction:column;text-align:center;}.m-head .meta{justify-content:center;}}
+  .cv{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--panel);}
+  .cv .k{font-size:11px;color:var(--muted);letter-spacing:0.14em;margin-bottom:5px;}
+  .cv .v{font-size:14px;color:var(--cream);}
+
+  ul.li{list-style:none;}
+  ul.li li{position:relative;padding-left:20px;margin-bottom:9px;font-size:14px;color:#d6d2c8;font-weight:300;}
+  ul.li li::before{content:"";position:absolute;left:2px;top:10px;width:7px;height:7px;border:1px solid var(--gold);transform:rotate(45deg);}
+
+  .tl-mini{position:relative;padding-left:22px;margin-top:4px;}
+  .tl-mini::before{content:"";position:absolute;left:5px;top:4px;bottom:4px;width:1px;background:var(--line);}
+  .tl-mini .ev{position:relative;margin-bottom:13px;}
+  .tl-mini .ev::before{content:"";position:absolute;left:-19px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(200,169,106,0.15);}
+  .tl-mini .yr{font-family:"Cormorant Garamond",serif;color:var(--gold-soft);font-size:14px;font-weight:700;}
+  .tl-mini .tx{font-size:13.5px;color:#cfcbc1;}
+
+  .books{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){.books{grid-template-columns:1fr;}}
+  .book{border:1px solid var(--line);border-radius:13px;padding:15px 16px;background:linear-gradient(180deg,var(--panel-2),var(--panel));text-decoration:none;color:inherit;display:block;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;}
+  .book:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 16px 36px -20px rgba(0,0,0,0.8);}
+  .blink{margin-top:9px;font-size:11.5px;color:var(--gold);opacity:.85;letter-spacing:0.04em;}
+  .quotes{display:flex;flex-direction:column;gap:12px;}
+  .quote{border-left:3px solid var(--gold);padding:12px 16px;background:rgba(200,169,106,0.06);border-radius:0 12px 12px 0;}
+  .q-orig{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;color:var(--gold-soft);line-height:1.45;}
+  .q-zh{font-size:14px;color:#d6d2c8;margin-top:6px;font-weight:300;}
+  .book .bt{font-family:"Noto Serif SC",serif;font-size:15px;font-weight:700;color:var(--cream);}
+  .book .ba{font-size:12px;color:var(--muted);margin-top:3px;font-style:italic;}
+  .book .br{display:flex;align-items:center;gap:8px;margin-top:9px;}
+  .stars{color:var(--gold);font-size:13px;letter-spacing:1px;}
+  .book .score{font-family:"Cormorant Garamond",serif;font-size:16px;color:var(--gold-soft);font-weight:700;}
+  .book .src{font-size:10.5px;color:var(--muted-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;}
+  .book .bn{font-size:12.5px;color:#cfcbc1;margin-top:8px;font-weight:300;}
+
+  .wisdom{border-left:3px solid var(--gold);padding:14px 18px;background:rgba(200,169,106,0.06);border-radius:0 12px 12px 0;font-size:14.5px;color:#e3dfd4;font-style:italic;}
+  .wisdom .who{display:block;margin-top:8px;font-style:normal;font-size:12px;color:var(--gold-soft);letter-spacing:0.1em;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12.5px;color:#d6d2c8;border:1px solid var(--line);border-radius:10px;padding:7px 12px;background:var(--panel);}
+
+  /* ---------- BRANCH MAP ---------- */
+  .branch-map{margin-top:54px;}
+  .branch-map h2{font-family:"Noto Serif SC",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
+  .branch-map p.cap{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px;}
+  .bm-row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(200,169,106,0.12);}
+  .bm-row .bk{flex:none;width:120px;font-family:"Noto Serif SC",serif;color:var(--gold-soft);font-size:15px;font-weight:700;padding-top:4px;}
+  .bm-row .bv{display:flex;flex-wrap:wrap;gap:9px;}
+  .bm-pill{font-size:13px;color:var(--cream);border:1px solid var(--line);border-radius:20px;padding:5px 14px;background:var(--panel);cursor:pointer;transition:.2s;}
+  .bm-pill:hover{border-color:var(--gold);color:var(--gold-soft);}
+
+  footer{margin-top:60px;text-align:center;color:var(--muted-2);font-size:12px;line-height:1.9;}
+  footer .div{width:60px;height:1px;background:var(--line);margin:0 auto 18px;}
+  .empty{text-align:center;color:var(--muted);padding:60px 0;font-size:15px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:820px){
+    .wrap{padding:0 18px 70px;}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:16px;}
+    .branch-map{margin-top:44px;}
+  }
+  @media(max-width:640px){
+    .hero{padding:46px 0 26px;}
+    .hero h1{font-size:clamp(28px,8vw,42px);}
+    .hero p.sub{font-size:13.5px;padding:0 4px;}
+    .stats{margin-top:26px;gap:10px;}
+    .stat{flex:1 1 40%;min-width:0;padding:11px 8px;}
+    .stat b{font-size:26px;}
+    .toolbar{padding:12px;gap:10px;margin:20px 0 18px;}
+    .search{flex:1 1 100%;}
+    .toolbar select{flex:1 1 130px;}
+    .seg{flex:1 1 100%;}
+    .seg button{flex:1;padding:10px 0;text-align:center;}
+    .card{padding:18px 16px 16px;}
+    .overlay{padding:14px 8px;}
+    .modal{border-radius:16px;}
+    .m-hero{flex-direction:column;text-align:center;padding:24px 18px 20px;}
+    .m-portrait{width:104px;height:130px;}
+    .m-head .meta{justify-content:center;}
+    .m-body{padding:6px 18px 26px;}
+    .cv-grid{grid-template-columns:1fr;}
+    .books{grid-template-columns:1fr;}
+    .bm-row{flex-direction:column;gap:9px;padding:13px 0;}
+    .bm-row .bk{width:auto;padding-top:0;}
+    .sec-h h3{font-size:16px;}
+  }
+  @media(max-width:400px){
+    .hero h1{font-size:clamp(23px,9vw,32px);}
+    .hero p.sub{font-size:12.5px;}
+    .m-portrait{width:90px;height:114px;}
+    .m-close{top:12px;right:12px;width:34px;height:34px;font-size:16px;}
+    .m-hero{padding:20px 14px 18px;}
+    .m-body{padding:6px 14px 22px;}
+    .card{padding:16px 14px 14px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">A Visual Compendium of Mathematics</div>
+    <h1>数学史上的<span class="accent">二十位巨人</span></h1>
+    <p class="sub">从公元前三世纪的亚历山大里亚，到二十一世纪的比利牛斯山——二十位重塑人类理性边界的大脑。肖像、年表、智评、高分书作与当今科学应用，一图尽览。</p>
+    <div class="stats">
+      <div class="stat"><b>20</b><span>位 巨 人</span></div>
+      <div class="stat"><b>4</b><span>大 梯 队</span></div>
+      <div class="stat"><b>≈2300</b><span>年 跨 度</span></div>
+      <div class="stat"><b>7</b><span>核 心 分 支</span></div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="q" type="text" placeholder="搜索姓名 / 分支 / 关键词…" />
+    </label>
+    <select id="fTier">
+      <option value="">全部梯队</option>
+      <option value="1">第一梯队 · 奠基者</option>
+      <option value="2">第二梯队 · 革命者</option>
+      <option value="3">第三梯队 · 建筑师</option>
+      <option value="4">第四梯队 · 桥梁者</option>
+    </select>
+    <select id="fBranch">
+      <option value="">全部分支</option>
+      <option value="几何">几何学</option>
+      <option value="代数">代数学</option>
+      <option value="分析">分析 / 微积分</option>
+      <option value="数论">数论</option>
+      <option value="逻辑">逻辑与基础</option>
+      <option value="拓扑">拓扑学</option>
+      <option value="概率">概率与统计</option>
+      <option value="计算">计算 / 计算机</option>
+      <option value="跨领域">跨领域</option>
+    </select>
+    <div class="seg" id="viewSeg">
+      <button data-v="grid" class="on">卡片</button>
+      <button data-v="timeline">时间轴</button>
+    </div>
+  </div>
+
+  <div id="results"></div>
+
+  <section class="branch-map">
+    <h2>分支代表人物速查</h2>
+    <p class="cap">点击任一学者，跳转至其详档</p>
+    <div id="branchMap"></div>
+  </section>
+
+  <footer>
+    <div class="div"></div>
+    <div>肖像为 AI 艺术再创作（古典油画风格），非历史真实画像，仅供视觉呈现。</div>
+    <div>书评分数为豆瓣 / Goodreads 公开评分的近似值，随版本与年份浮动，仅供参考。</div>
+    <div>整理时间：2026 年 7 月 · 排名含主观性，数学史绵延两千余年，每位大师皆站在前人之肩。</div>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const DATA = [
+{
+  slug:"euclid", rank:1, tier:1, tierName:"奠基者",
+  cn:"欧几里得", en:"Euclid", years:"约前325 – 前265",
+  born:"古希腊 · 亚历山大里亚", branches:["几何"],
+  tags:["几何学","公理化方法","演绎体系"],
+  summary:"以《几何原本》建立公理—定理演绎体系，奠定数学两千年严谨底色。",
+  cv:{ "国籍 / 时代":"古希腊（托勒密埃及）", "核心分支":"几何学 / 公理化", "代表著作":"《几何原本》", "历史地位":"演绎法之父" },
+  timeline:[
+    {yr:"约前300",tx:"完成《几何原本》十三卷，系统整理古希腊几何与数论。"},
+    {yr:"后世",tx:"《几何原本》成为史上印刷量第二大的著作，仅次于《圣经》。"}
+  ],
+  contributions:[
+    "建立「公理—定义—定理」的演绎体系，使数学第一次成为严密的逻辑大厦。",
+    "提出欧几里得算法（辗转相除法），至今是数论与计算机算法的基石。",
+    "系统证明 Pythagorean 定理、素数无穷、正多面体仅有五种等经典结论。"
+  ],
+  works:["《几何原本》（Elements）","《数据》（Data）","《论剖分》（On Divisions）"],
+  friends:["托勒密一世（埃及国王，资助其在亚历山大里亚办学）"],
+  anecdote:"托勒密国王问有无学习几何的捷径，欧几里得答：「几何无王者之路。」（There is no royal road to geometry.）",
+  extension:"《几何原本》的第五公设（平行公设）引发千年争论，最终催生非欧几何——高斯、黎曼、罗巴切夫斯基由此改写空间观念。",
+  wisdom:"他留下的不是一堆结论，而是一套「如何证明」的方法论。现代数学的尊严，始于他定下的那条铁律：一切结论必须溯源于不证自明的公理。",
+  books:[
+    {t:"《几何原本》",a:"欧几里得 / 译林出版社",s:9.2,src:"豆瓣",n:"公理化范本，多译本长期居科普经典之列。"},
+    {t:"《度量》",a:"保罗·洛克哈特",s:8.8,src:"豆瓣",n:"以「数学是一门艺术」重新唤醒几何直觉。"},
+    {t:"《数学的故事》",a:"理查德·曼凯维奇",s:8.4,src:"豆瓣",n:"从埃及到现代，几何演进的通俗全景。"}
+  ],
+  modern:["公理化方法 → 计算机科学的形式化验证与程序正确性证明","几何建模与 CAD / 计算机图形学的基础","密码学协议的可证明安全（reduction 思想）","GPS 与空间定位背后的几何框架"]
+},
+{
+  slug:"archimedes", rank:2, tier:1, tierName:"奠基者",
+  cn:"阿基米德", en:"Archimedes", years:"约前287 – 前212",
+  born:"古希腊 · 叙拉古", branches:["几何","分析"],
+  tags:["穷竭法","π 的精度","浮力定律","杠杆原理"],
+  summary:"用穷竭法逼近积分，把数学与物理、工程熔为一炉的古代全才。",
+  cv:{ "国籍 / 时代":"古希腊（叙拉古）", "核心分支":"几何 / 数学分析先驱", "代表发现":"浮力定律、杠杆原理", "历史地位":"古代世界最伟大的数学家" },
+  timeline:[
+    {yr:"约前250",tx:"著《论球与圆柱》《方法论》，以力学直觉发现数学定理。"},
+    {yr:"前212",tx:"罗马攻陷叙拉古，阿基米德于沙地绘图时被士兵杀害。"}
+  ],
+  contributions:[
+    "用穷竭法将 π 精确夹在 3.1408 与 3.1429 之间，逼近积分思想。",
+    "算出抛物线弓形面积、球体积与表面积，预见微积分核心结论。",
+    "发现浮力定律与杠杆原理，将数学工具第一次大规模用于工程。"
+  ],
+  works:["《论球与圆柱》","《论平面图形的平衡》","《数沙者》","《方法论》"],
+  friends:["希伦二世（叙拉古国王，保护人与挚友）"],
+  anecdote:"城破之时他正专注沙地几何，士兵逼近仍说「别弄坏我的圆」。传说他高呼：「给我一个支点，我就能撬动地球。」",
+  extension:"他的《方法论》以「将未知图形切成无穷薄片再平衡」的思路，几乎就是今天的积分法——比牛顿早了 1800 年。",
+  wisdom:"他是第一位把「数学推理」与「物理实在」打通的人。若无他，力学与工程或许要晚成熟千年。",
+  books:[
+    {t:"《阿基米德传》",a:"E.J. Dijksterhuis",s:8.6,src:"豆瓣",n:"经典学术传记，还原其工作全貌。"},
+    {t:"《创造力：心流与创新心理学》",a:"米哈里·契克森米哈赖",s:8.7,src:"豆瓣",n:"以阿基米德等为例谈创造心流。"},
+    {t:"《数学大师》",a:"E.T. 贝尔",s:8.5,src:"豆瓣",n:"含阿基米德在内的数学家群像。"}
+  ],
+  modern:["穷竭法 → 现代数值积分与极限理论","浮力与杠杆 → 流体力学、船舶与结构工程","无穷切片思想 → 微积分与计算机数值方法","阿基米德螺旋 → 现代泵与流体机械原型"]
+},
+{
+  slug:"newton", rank:3, tier:1, tierName:"奠基者",
+  cn:"牛顿", en:"Isaac Newton", years:"1643 – 1727",
+  born:"英国 · 剑桥", branches:["分析","计算","跨领域"],
+  tags:["微积分","万有引力","运动三定律","《原理》"],
+  summary:"独立发明微积分，以《原理》统一天上与地下，开启经典物理学纪元。",
+  cv:{ "国籍 / 时代":"英国（1643–1727）", "核心分支":"微积分 / 数学物理", "代表著作":"《自然哲学的数学原理》", "历史地位":"经典力学奠基人" },
+  timeline:[
+    {yr:"1665–66",tx:"「奇迹年」：因瘟疫避居乡间，发明微积分、悟出万有引力、研究光学。"},
+    {yr:"1687",tx:"哈雷资助出版《自然哲学的数学原理》。"},
+    {yr:"1703",tx:"当选皇家学会会长。"}
+  ],
+  contributions:[
+    "与莱布尼茨各自独立发明微积分，给出导数与积分的系统框架。",
+    "提出万有引力定律与运动三定律，统一天体与地面运动。",
+    "推广二项式定理，发展无穷级数理论。"
+  ],
+  works:["《自然哲学的数学原理》","《光学》"],
+  friends:["埃德蒙·哈雷（资助并推动《原理》出版）","艾萨克·巴罗（导师，主动让位卢卡斯教授）"],
+  anecdote:"晚年沉迷炼金术与神学研究；与胡克、莱布尼茨均有激烈论战，性格孤僻而记仇。",
+  extension:"牛顿—莱布尼茨的微积分优先权之争，使英、欧大陆数学界疏离近百年，间接影响了分析学在欧陆的更快发展。",
+  wisdom:"他用一条公式装下了整个宇宙的运行规律。但别忘了：这位理性的化身，晚年把同样的热情投进了炼金术与《圣经》密码。",
+  books:[
+    {t:"《永不停歇：牛顿传》",a:"理查德·韦斯特福尔",s:9.0,src:"豆瓣",n:"最权威传记（Never at Rest）。"},
+    {t:"《牛顿传》",a:"迈克尔·怀特",s:8.3,src:"豆瓣",n:"更通俗的生平解读。"},
+    {t:"《微积分之战》",a:"詹森·苏格拉底",s:8.5,src:"豆瓣",n:"牛顿与莱布尼茨的优先权之争。"}
+  ],
+  modern:["微积分 → 天体力学、轨道计算、工程仿真","微分方程 → 物理引擎、金融量化模型","万有引力框架 → GPS 卫星轨道修正","优化理论 → 机器学习梯度下降的远祖"]
+},
+{
+  slug:"leibniz", rank:4, tier:1, tierName:"奠基者",
+  cn:"莱布尼茨", en:"G. W. Leibniz", years:"1646 – 1716",
+  born:"德国 · 莱比锡", branches:["分析","逻辑","计算"],
+  tags:["微积分符号","二进制","数理逻辑先驱","∫ dx"],
+  summary:"发明沿用至今的微积分符号与二进制，构想「普遍符号语言」——AI 的远祖。",
+  cv:{ "国籍 / 时代":"德国（1646–1716）", "核心分支":"微积分 / 数理逻辑", "代表贡献":"∫ 符号、二进制", "历史地位":"通才与符号大师" },
+  timeline:[
+    {yr:"1672–76",tx:"在巴黎受惠更斯指导，进入数学前沿，萌生微积分思想。"},
+    {yr:"1679",tx:"系统阐述二进制，视作宇宙的逻辑语言。"},
+    {yr:"1684",tx:"发表首篇微积分论文《一种求极大极小的新方法》。"}
+  ],
+  contributions:[
+    "创用 dx/dy 与积分号 ∫，其符号体系沿用至今、远胜牛顿记法。",
+    "独立发明二进制，成为现代计算机架构的数理根基。",
+    "在《论组合术》中构想数理逻辑，是符号逻辑与 AI 的远祖。"
+  ],
+  works:["《单子论》","《人类理解新论》","《论组合术》","《一种求极大极小的新方法》"],
+  friends:["克里斯蒂安·惠更斯（巴黎时期的数学引路人）","约翰·伯努利（长期通信的学术支持者）","苏菲·夏洛特（普鲁士王后，哲学赞助者）"],
+  anecdote:"他造出人类史上第一台可四则运算的机械计算器（步进计算器）；设想的「普遍符号语言」被视为数理逻辑与人工智能的先声。",
+  extension:"莱布尼茨的二进制直到 20 世纪才在计算机中复活；他的符号偏好深刻影响了一门学科的美学——好记法本身就是生产力。",
+  wisdom:"若说牛顿给了微积分的肉身，莱布尼茨则给了它优雅的衣裳。∫ 与 d 能流传三百年，是因为他懂：表达方式的优劣，决定思想的传播速度。",
+  books:[
+    {t:"《莱布尼茨：思想传记》",a:"M.R. Antognazza",s:8.7,src:"Goodreads",n:"最权威的现代传记。"},
+    {t:"《逻辑的引擎》",a:"马丁·戴维斯",s:8.7,src:"豆瓣",n:"从莱布尼茨到图灵的逻辑机器史。"},
+    {t:"《单子论》",a:"莱布尼茨",s:8.5,src:"豆瓣",n:"哲学代表作，窥其世界观。"}
+  ],
+  modern:["∫ / d 符号 → 全部工程与物理分析的书写语言","二进制 → 所有数字计算机的底层语言","链式法则 → 神经网络反向传播的数学核心","普遍符号语言 → 自动推理与知识图谱的先声"]
+},
+{
+  slug:"euler", rank:5, tier:1, tierName:"奠基者",
+  cn:"欧拉", en:"Leonhard Euler", years:"1707 – 1783",
+  born:"瑞士 · 巴塞尔", branches:["跨领域","分析","拓扑"],
+  tags:["最多产","e^iπ+1=0","图论之父","f(x) 记号"],
+  summary:"史上最多产数学家，几乎在所有分支留名；失明后仍口述半数论文。",
+  cv:{ "国籍 / 时代":"瑞士（1707–1783）", "核心分支":"几乎全部分支", "代表公式":"e^{iπ}+1=0", "历史地位":"分析学标准化者" },
+  timeline:[
+    {yr:"1748",tx:"出版《无穷分析引论》，史上最有影响力的数学教材之一。"},
+    {yr:"1736",tx:"以柯尼斯堡七桥问题开创图论。"},
+    {yr:"1771后",tx:"双目失明，17 年间口述逾半数论文。"}
+  ],
+  contributions:[
+    "创立现代函数记号 f(x)，确立 e、π、i、Σ 等符号标准。",
+    "欧拉公式 e^{iπ}+1=0 被誉为「数学中最美的等式」。",
+    "以柯尼斯堡七桥问题奠基图论，创立分析力学体系。"
+  ],
+  works:["《无穷分析引论》","《微分学原理》","《积分学原理》","《力学》"],
+  friends:["约翰·伯努利（恩师，识其天赋）","丹尼尔·伯努利（挚友与长期通信者）","哥德巴赫（素数猜想提出者，长期对话者）"],
+  anecdote:"失明 17 年间口述了超过一半论文；两学生做级数求和差了 5 位小数，他心算即指出错误。",
+  extension:"欧拉示性数 V−E+F=2 把「形状」变成可被数出来的不变量，是拓扑学的起点；今天你在任何网络与地图里都躲不开它。",
+  wisdom:"他证明了「产出」不依赖器官，而依赖思维结构。一个人能同时占领分析、数论、力学、图论，说明所谓天才，往往是把同一套直觉用到了所有地方。",
+  books:[
+    {t:"《欧拉：数学家的故事》",a:"传记绘本",s:8.4,src:"豆瓣",n:"入门向，适合建立亲切感。"},
+    {t:"《无穷的玩艺》",a:"R. 柯朗 / 罗宾斯",s:8.8,src:"豆瓣",n:"含欧拉思想的科普经典。"},
+    {t:"《数学之美》",a:"吴军",s:8.8,src:"豆瓣",n:"以欧拉公式为例讲信息论之美。"}
+  ],
+  modern:["图论 → 网络科学、社交网络、物流与 PCB 布线","欧拉路径 → 一笔画问题与电路设计","e^{iπ} 与傅里叶 → 信号处理、图像压缩","分析力学 → 机器人运动学与控制系统"]
+},
+{
+  slug:"gauss", rank:6, tier:2, tierName:"革命者",
+  cn:"高斯", en:"C. F. Gauss", years:"1777 – 1855",
+  born:"德国 · 不伦瑞克", branches:["数论","几何","分析","概率"],
+  tags:["数学王子","《算术研究》","高斯分布","非欧几何"],
+  summary:"以《算术研究》奠定现代数论，横跨统计、几何、天文，却把太多发现藏进笔记。",
+  cv:{ "国籍 / 时代":"德国（1777–1855）", "核心分支":"数论 / 几何 / 统计", "代表著作":"《算术研究》", "历史地位":"数学王子" },
+  timeline:[
+    {yr:"1798",tx:"21 岁写成《算术研究》，现代数论奠基之作。"},
+    {yr:"1801",tx:"用最小二乘法预测谷神星轨道，震惊天文界。"},
+    {yr:"1827",tx:"发表《曲面的一般研究》，开创微分几何。"}
+  ],
+  contributions:[
+    "《算术研究》系统建立同余、二次互反律，奠定现代数论。",
+    "独立发现非欧几何（未发表），提出高斯曲率。",
+    "最小二乘法、正态分布（高斯分布）、高斯整数等影响深远。"
+  ],
+  works:["《算术研究》","《天体运动论》","《曲面的一般研究》"],
+  friends:["威廉·韦伯（合作电磁电报，地球磁场搭档）","不伦瑞克公爵（自幼资助其读书）","洪堡（助其获哥廷根职位）"],
+  anecdote:"他信奉「少，但要成熟」（Pauca sed matura），每篇论文精雕细琢，大量发现藏身后才被整理——雅诺什·波尔约独立发现非欧几何，他却反应冷淡。",
+  extension:"高斯分布几乎刻画了「随机噪声」的普遍形态，从测量误差到股票收益、从量子涨落到人脸识别，都离不开这条钟形曲线。",
+  wisdom:"高斯是「完美主义」的双面镜：他发表的都成了经典，但藏起来的太多，让一些发现迟到了几十年。科学需要严谨，也需要勇气把不完美的草稿交给世界。",
+  books:[
+    {t:"《高斯传》",a:"湖南科学技术出版社",s:8.2,src:"豆瓣",n:"国内较系统的传记。"},
+    {t:"《数学王子高斯》",a:"通俗本",s:7.9,src:"豆瓣",n:"面向大众的轻松读物。"},
+    {t:"《素数之恋》",a:"约翰·德比希尔",s:8.8,src:"豆瓣",n:"从高斯到黎曼的素数故事。"}
+  ],
+  modern:["最小二乘 → 卫星定位（GPS）、传感器融合","高斯分布 → 统计推断、AI 概率模型","高斯曲率 → 广义相对论、计算机视觉曲面重建","非欧几何 → 现代宇宙学与导航"]
+},
+{
+  slug:"galois", rank:7, tier:2, tierName:"革命者",
+  cn:"伽罗瓦", en:"É. Galois", years:"1811 – 1832",
+  born:"法国 · 布尔拉雷讷", branches:["代数","拓扑"],
+  tags:["群论开创","五次方程不可解","决斗早逝"],
+  summary:"20 岁死于决斗，却以群论彻底解决五次方程，开创现代代数。",
+  cv:{ "国籍 / 时代":"法国（1811–1832）", "核心分支":"代数学 / 群论", "代表理论":"伽罗瓦理论", "历史地位":"群论之父" },
+  timeline:[
+    {yr:"1829–31",tx:"两度向科学院投稿，手稿被柯西、傅里叶弄丢。"},
+    {yr:"1832.5",tx:"决斗前夜写就遗稿，嘱友传播其思想。"},
+    {yr:"1846",tx:"刘维尔整理发表其遗稿，理论震动学界。"}
+  ],
+  contributions:[
+    "创立群论，用「对称性结构」彻底回答五次方程何时可根式求解。",
+    "提出伽罗瓦对应，把代数方程的可解性转化为群的结构问题。",
+    "其思想成为现代代数、数论与代数几何的共同语言。"
+  ],
+  works:["《关于方程根式可解条件的论文》（遗稿）"],
+  friends:["奥古斯特·舍瓦利埃（决斗前夜收其遗信的挚友）","西梅翁·庞索（同窗，陪其走完最后时光）"],
+  anecdote:"决斗原因成谜（政治或情杀？）。遗稿在他去世后 14 年才发表，理论超前了时代半个世纪。",
+  extension:"伽罗瓦把「可解性」翻译成「对称性缺失」——这一视角后来统治了整个现代代数，连费马大定理的证明都建在其语言之上。",
+  wisdom:"他用 20 年生命换来的，是一个能让后人为之工作两百年的框架。天才的悲剧不在于早逝，而在于世界太慢才听懂他。",
+  books:[
+    {t:"《伽罗瓦传》",a:"多版本",s:8.3,src:"豆瓣",n:"国内有数个中译本。"},
+    {t:"《天才与传记作家》",a:"T. Rothman",s:8.1,src:"Goodreads",n:"解析决斗之谜与科学史。"},
+    {t:"《对称》",a:"赫尔曼·外尔",s:8.6,src:"豆瓣",n:"从群论视角看对称性。"}
+  ],
+  modern:["群论 → 现代代数与表示论的核心语言","对称性 → 粒子物理标准模型的分类基础","纠错编码 → 深空通信、二维码（伽罗瓦域）","公钥密码 → 基于有限域与椭圆曲线群"]
+},
+{
+  slug:"riemann", rank:8, tier:2, tierName:"革命者",
+  cn:"黎曼", en:"B. Riemann", years:"1826 – 1866",
+  born:"德国 · 布雷塞伦茨", branches:["几何","分析","数论"],
+  tags:["黎曼几何","广义相对论框架","黎曼猜想","复分析"],
+  summary:"以弯曲空间的几何为爱因斯坦铺路，黎曼猜想悬赏百万美元至今未解。",
+  cv:{ "国籍 / 时代":"德国（1826–1866）", "核心分支":"几何 / 分析 / 数论", "代表理论":"黎曼几何", "历史地位":"几何学改写者" },
+  timeline:[
+    {yr:"1854",tx:"就职演讲《论几何基础的假设》仅十余页，改写几何方向。"},
+    {yr:"1859",tx:"论文提出黎曼猜想，列为千禧年七大难题之一。"},
+    {yr:"1866",tx:"40 岁因肺结核去世。"}
+  ],
+  contributions:[
+    "创立黎曼几何（弯曲空间的数学），成为广义相对论的时空框架。",
+    "提出黎曼积分与流形概念，是现代分析与几何的基石。",
+    "黎曼猜想刻画素数分布的深层规律，悬赏 100 万美元。"
+  ],
+  works:["《论几何基础的假设》","《关于给定大小之下素数个数的解》","《阿贝尔函数论》"],
+  friends:["狄利克雷（导师与伯乐，贫困时资助他）","戴德金（同窗挚友，整理其全集）","威廉·韦伯（指导其物理学）"],
+  anecdote:"1854 年那场十余页的就职演讲，直接改写了整个几何学的方向；黎曼猜想至今仍是数学界最重要的未解问题。",
+  extension:"黎曼猜想若被证伪，大量建立在「素数随机性假设」上的密码与算法结论都要重写——它是一根牵动整个数论与密码学的神经。",
+  wisdom:"他一生只发表寥寥十余篇，却篇篇是地震。证明一个领域「该往哪走」，有时比解决一百个细节更有力量。",
+  books:[
+    {t:"《素数之恋》",a:"约翰·德比希尔",s:8.8,src:"豆瓣",n:"黎曼猜想的通俗史诗。"},
+    {t:"《黎曼传》",a:"科学普及出版社",s:7.6,src:"豆瓣",n:"基础生平读物。"},
+    {t:"《时间的形状》",a:"汪洁",s:8.3,src:"豆瓣",n:"以黎曼几何讲相对论通俗版。"}
+  ],
+  modern:["黎曼几何 → 广义相对论、现代宇宙学","流形与几何分析 → 计算机图形学、医学影像","黎曼猜想 → 素数分布、密码学安全假设","复分析 → 流体、电气与信号处理"]
+},
+{
+  slug:"cantor", rank:9, tier:2, tierName:"革命者",
+  cn:"康托尔", en:"G. Cantor", years:"1845 – 1918",
+  born:"德国（生于圣彼得堡）", branches:["逻辑","跨领域"],
+  tags:["集合论","超限数","不同大小的无穷","希尔伯特力挺"],
+  summary:"创立集合论、证明无穷有大小之分，却在权威打压下数度精神崩溃。",
+  cv:{ "国籍 / 时代":"德国（1845–1918）", "核心分支":"集合论 / 逻辑基础", "代表理论":"超限数", "历史地位":"集合论之父" },
+  timeline:[
+    {yr:"1874",tx:"证明实数不可数，开启「不同大小的无穷」。"},
+    {yr:"1883",tx:"出版《超限数理论基础》。"},
+    {yr:"晚年",tx:"遭克罗内克猛烈攻击，数度进出精神病院。"}
+  ],
+  contributions:[
+    "创立集合论，使「无穷」成为可严格研究的数学对象。",
+    "提出超限数与基数概念，证明实数比代数数「多得多」。",
+    "为 20 世纪全部数学奠定统一的基础语言。"
+  ],
+  works:["《超限数理论基础》","关于三角级数的论文"],
+  friends:["米塔-列夫勒（瑞典数学家，困难时提供发表渠道）","希尔伯特（晚年坚定捍卫者）"],
+  anecdote:"克罗内克称他为「科学骗子」「腐化青年的危险人物」，康托尔多次精神崩溃；去世后集合论被希尔伯特称为「数学最令人惊叹的产物」。",
+  extension:"康托尔的对角线论证，后来被图灵借去证明「停机问题不可判定」——集合论的方法论，直接孕育了计算理论的边界。",
+  wisdom:"他挑战的不是某个公式，而是「无穷」这个人类直觉的禁区。被同时代权威视为疯子，却为整个现代数学打好了地基——真理常常先以「疯狂」的面目出现。",
+  books:[
+    {t:"《康托尔传》",a:"中文译本",s:7.8,src:"豆瓣",n:"国内极少译本之一。"},
+    {t:"《确定性的终结》",a:"伊利亚·普里戈金",s:8.2,src:"豆瓣",n:"论科学中的秩序与混沌。"},
+    {t:"《数学：确定性的丧失》",a:"M. 克莱因",s:8.5,src:"豆瓣",n:"从康托尔到现代基础危机。"}
+  ],
+  modern:["集合论 → 计算机科学的形式基础","基数/序数 → 离散数学、数据库理论","对角线法 → 可计算性证明（图灵、哥德尔）","实分析 → 概率论、金融建模的根基"]
+},
+{
+  slug:"poincare", rank:10, tier:2, tierName:"革命者",
+  cn:"庞加莱", en:"H. Poincaré", years:"1854 – 1912",
+  born:"法国 · 南锡", branches:["拓扑","跨领域","分析"],
+  tags:["代数拓扑之父","庞加莱猜想","混沌先驱","最后一位通才"],
+  summary:"最后一位全才：开创代数拓扑、预见混沌、比爱因斯坦更早得到洛伦兹变换。",
+  cv:{ "国籍 / 时代":"法国（1854–1912）", "核心分支":"拓扑 / 动力系统", "代表猜想":"庞加莱猜想", "历史地位":"最后一位通才" },
+  timeline:[
+    {yr:"1895",tx:"出版《拓扑学》（Analysis Situs），代数拓扑开端。"},
+    {yr:"1904",tx:"提出庞加莱猜想（2006 年由佩雷尔曼证明）。"},
+    {yr:"1905前后",tx:"独立得到洛伦兹变换，相对论先驱。"}
+  ],
+  contributions:[
+    "开创代数拓扑，提出庞加莱猜想这一世纪级难题。",
+    "研究三体问题，首次从数学上证明混沌现象的存在。",
+    "在相对论、电磁学与科学哲学上均有奠基性贡献。"
+  ],
+  works:["《天体力学新方法》","《拓扑学》","科普四部曲：《科学与假设》等"],
+  friends:["埃尔米特（博士导师，极赏其天才）","保罗·阿佩尔（期刊编辑同事）","潘勒韦（数学家兼法国总理，学术盟友）"],
+  anecdote:"他解决问题常先让问题在潜意识「发酵」，灵光乍现一刻落笔；记忆力惊人，能逐字复述读过的文章。",
+  extension:"他证明「三体运动对初值极度敏感」——这正是「蝴蝶效应」与混沌理论的数学源头，如今深刻影响着天气预报与经济建模。",
+  wisdom:"他是通才时代的绝响。今天知识爆炸，再难有人横跨数学、物理、天文与哲学；庞加莱提醒我们：深度与广度的张力，本身就是智识的命题。",
+  books:[
+    {t:"《庞加莱传》",a:"蔡天新 译",s:8.4,src:"豆瓣",n:"浙江大学出版社。"},
+    {t:"《科学与假设》",a:"庞加莱",s:8.9,src:"豆瓣",n:"科学哲学经典，文笔一流。"},
+    {t:"《混沌》",a:"詹姆斯·格莱克",s:8.8,src:"豆瓣",n:"混沌理论的通俗史诗。"}
+  ],
+  modern:["代数拓扑 → 拓扑数据分析（TDA）、医学与材料结构识别","混沌理论 → 气象、经济与生态建模","庞加莱猜想 → 三维流形分类（相对论宇宙模型）","相对论先驱 → 现代时空物理的方法铺垫"]
+},
+{
+  slug:"hilbert", rank:11, tier:3, tierName:"建筑师",
+  cn:"希尔伯特", en:"D. Hilbert", years:"1862 – 1943",
+  born:"德国 · 哥尼斯堡", branches:["逻辑","分析","跨领域"],
+  tags:["23个问题","希尔伯特空间","形式主义","哥廷根学派"],
+  summary:"1900 年提出 23 个问题指引整个世纪，希尔伯特空间成量子力学核心工具。",
+  cv:{ "国籍 / 时代":"德国（1862–1943）", "核心分支":"泛函分析 / 逻辑", "代表事件":"1900 巴黎演讲", "历史地位":"哥廷根学派领袖" },
+  timeline:[
+    {yr:"1899",tx:"《几何基础》公理化重建几何。"},
+    {yr:"1900",tx:"巴黎演讲提出 23 个问题，指引 20 世纪数学。"},
+    {yr:"1930",tx:"退休致辞：「我们必须知道，我们终将知道。」"}
+  ],
+  contributions:[
+    "1900 年提出 23 个问题，规划了整个 20 世纪的数学方向。",
+    "创立希尔伯特空间，成为量子力学的标准数学语言。",
+    "提出形式主义纲领，深刻塑造数学基础研究方向。"
+  ],
+  works:["《几何基础》","《线性积分方程》","《理论逻辑基础》（与阿克曼）","《数学物理方法》（与柯朗）"],
+  friends:["闵可夫斯基（同窗挚友，时空观念影响爱因斯坦）","赫维茨（哥尼斯堡三人组之一）","埃米·诺特（力排众议为其争取教职）"],
+  anecdote:"23 问中约一半已解决，含费马大定理（已证）、黎曼猜想（未解）。他说：「我们必须知道，我们终将知道。」",
+  extension:"第 6 个问题（物理学的公理化）衍生出对「P vs NP」等计算边界的追问；希尔伯特空间则把无穷维向量空间变成量子世界的语法。",
+  wisdom:"他最伟大的发明不是某个定理，而是一份「待办清单」。会提问题的人，比会解题的人更能定义一个时代——这是领导者与工匠的根本区别。",
+  books:[
+    {t:"《希尔伯特传》",a:"康斯坦丝·瑞德",s:9.1,src:"豆瓣",n:"数学家传记中的经典。"},
+    {t:"《数学世界的亚历山大》",a:"相关传记",s:8.5,src:"豆瓣",n:"以希尔伯特喻数学帝国的建构者。"},
+    {t:"《数学天书中的证明》",a:"艾格纳 / 齐格勒",s:9.2,src:"豆瓣",n:"含希尔伯特相关问题精选。"}
+  ],
+  modern:["希尔伯特空间 → 量子力学、信号与图像处理","23 问题 → 千禧年难题的研究谱系","形式主义 → 证明论与计算机证明辅助（Coq/Lean）","公理化方法 → 现代数学与理论物理的严谨标准"]
+},
+{
+  slug:"ramanujan", rank:12, tier:3, tierName:"建筑师",
+  cn:"拉马努金", en:"S. Ramanujan", years:"1887 – 1920",
+  born:"印度 · 埃罗德", branches:["数论","分析","跨领域"],
+  tags:["自学天才","约3900条公式","模形式","1729"],
+  summary:"几乎未受正规训练，凭直觉写下约 3900 条公式，至今仍在被证明。",
+  cv:{ "国籍 / 时代":"印度（1887–1920）", "核心分支":"数论 / 模形式", "代表成果":"拉马努金θ函数", "历史地位":"直觉的天才" },
+  timeline:[
+    {yr:"1913",tx:"致信哈代，附惊人公式，被邀至剑桥。"},
+    {yr:"1916",tx:"凭论文获剑桥 Fellow，与哈代合作。"},
+    {yr:"1920",tx:"32 岁病逝，留下四本笔记约 3900 条公式。"}
+  ],
+  contributions:[
+    "发现拉马努金θ函数、分拆数渐近公式与大量恒等式。",
+    "提出拉马努金猜想（后纳入朗兰兹纲领被证）。",
+    "其笔记持续启发模形式、组合与弦理论研究至今。"
+  ],
+  works:["《拉马努金笔记》（四本笔记本）","正式论文 37 篇"],
+  friends:["G.H. 哈代（引路人、合作者与挚友）","利特尔伍德（哈代搭档，剑桥三人组）"],
+  anecdote:"哈代探病说出租车牌 1729 无趣，拉马努金立刻答：它是能用两立方和表示的「最小」正整数（1729=1³+12³=9³+10³）。",
+  extension:"他的模形式公式在百年后被物理学家用于描述黑洞熵——一个凭直觉写下的式子，竟在弦论的宇宙里找到了归宿。",
+  wisdom:"拉马努金逼问我们：数学究竟是逻辑的训练，还是某种先验的直觉？他证明了一件事——有些真理，可以越过证明直接被「看见」。",
+  books:[
+    {t:"《知无涯者：拉马努金传》",a:"罗伯特·卡尼格尔",s:9.0,src:"豆瓣",n:"经典传记，亦拍成电影。"},
+    {t:"《拉马努金：十二堂讲座》",a:"G.H. 哈代",s:8.7,src:"豆瓣",n:"合作者亲撰的纪念性学术传记。"},
+    {t:"《牛津通识：数论》",a:"罗宾·威尔逊",s:8.0,src:"豆瓣",n:"入门数论背景。"}
+  ],
+  modern:["模形式 → 弦理论、黑洞熵的计算","分拆数公式 → 组合数学与统计物理","朗兰兹纲领 → 现代数论统一框架","拉马努金恒等式 → 算法优化与高精度计算"]
+},
+{
+  slug:"godel", rank:13, tier:3, tierName:"建筑师",
+  cn:"哥德尔", en:"K. Gödel", years:"1906 – 1978",
+  born:"奥匈帝国 · 布尔诺", branches:["逻辑","计算"],
+  tags:["不完备定理","形式系统局限","哥德尔宇宙","爱因斯坦挚友"],
+  summary:"不完备定理粉碎「数学可完全公理化」的梦想，划定了形式系统的边界。",
+  cv:{ "国籍 / 时代":"奥匈/美国（1906–1978）", "核心分支":"数理逻辑 / 基础", "代表定理":"不完备定理", "历史地位":"逻辑学巨擘" },
+  timeline:[
+    {yr:"1931",tx:"25 岁发表不完备定理，震动数学基础。"},
+    {yr:"1940",tx:"证明连续统假设与 ZFC 的一致性。"},
+    {yr:"1949",tx:"发现允许时间旅行的「哥德尔宇宙」解。"}
+  ],
+  contributions:[
+    "证明任何自洽且足够强的形式系统内，必存在不可判定的命题。",
+    "粉碎希尔伯特「一切数学真理皆可证」的形式化梦想。",
+    "其思想成为计算机科学与可计算性理论的哲学基石。"
+  ],
+  works:["《〈数学原理〉中的不可判定命题》","《连续统假设的一致性》"],
+  friends:["爱因斯坦（普林斯顿忘年交，每日同散步）","冯·诺依曼（早期支持者，首解其意义）","卡尔·门格尔（维也纳小组对话者）"],
+  anecdote:"25 岁发表不完备定理，直接终结希尔伯特纲领；他还在广义相对论中找到一个允许时间旅行的解（哥德尔宇宙）。",
+  extension:"不完备定理与图灵机互为表里：一个说明「存在不可证 truth」，一个说明「存在不可解 problem」——两者共同划定了「机器能思考到哪一步」的天花板。",
+  wisdom:"他用最严格的逻辑，证明了逻辑本身有天花板。对 AI 而言这是一记警钟：再强的系统，也可能包含它永远无法自证的前提。",
+  books:[
+    {t:"《哥德尔传》",a:"世界图书出版公司",s:8.4,src:"豆瓣",n:"中文权威传记。"},
+    {t:"《哥德尔、艾舍尔、巴赫》",a:"道格拉斯·侯世达",s:9.4,src:"豆瓣",n:"借不完备讲心智与自我。"},
+    {t:"《逻辑的引擎》",a:"马丁·戴维斯",s:8.7,src:"豆瓣",n:"哥德尔到图灵的逻辑机器史。"}
+  ],
+  modern:["不完备定理 → 计算机科学的理论边界","可判定性 → 编译器、验证工具的局限认知","一致性证明 → 数学基础与类型论","哥德尔宇宙 → 理论宇宙学与时空哲学"]
+},
+{
+  slug:"vonneumann", rank:14, tier:3, tierName:"建筑师",
+  cn:"冯·诺依曼", en:"J. von Neumann", years:"1903 – 1957",
+  born:"匈牙利 · 布达佩斯", branches:["计算","跨领域","分析"],
+  tags:["现代计算机架构","博弈论","曼哈顿计划","算子代数"],
+  summary:"冯·诺依曼架构定义了一切现代计算机，博弈论重塑了经济学。",
+  cv:{ "国籍 / 时代":"匈/美（1903–1957）", "核心分支":"计算机 / 博弈论", "代表贡献":"EDVAC 报告", "历史地位":"现代计算机之父之一" },
+  timeline:[
+    {yr:"1928",tx:"与摩根斯特恩开创博弈论。"},
+    {yr:"1945",tx:"EDVAC 报告奠定存储程序计算机架构。"},
+    {yr:"1957",tx:"52 岁因骨癌去世。"}
+  ],
+  contributions:[
+    "EDVAC 报告确立「存储程序」计算机架构，沿用至今。",
+    "与摩根斯特恩共创博弈论，重塑经济学与战略学。",
+    "在算子代数、量子力学公理化、曼哈顿计划中均为核心。"
+  ],
+  works:["《博弈论与经济行为》","《量子力学的数学基础》","《计算机与人脑》"],
+  friends:["维格纳（儿时好友，诺奖物理学家，姻亲）","爱因斯坦（普林斯顿同事）","哥德尔（普林斯顿共事）"],
+  anecdote:"大脑处理速度惊人，临终前还能一字不差背诵希腊文诗篇；52 岁死于骨癌（推测与曼哈顿计划辐射有关）。",
+  extension:"你手机里的每一颗芯片，都跑在「冯·诺依曼架构」上：指令与数据共用内存、顺序取指——这套 1945 年的设计，至今无人能彻底绕开。",
+  wisdom:"他证明了「通才」在现代依然可能——只要大脑足够快、足够广。从氢弹到股市模型到你的 CPU，他的影子无处不在。",
+  books:[
+    {t:"《来自未来的人》",a:"A. Bhattacharya",s:8.6,src:"Goodreads",n:"2021 新权威传记。"},
+    {t:"《冯·诺依曼传》",a:"诺曼·麦克雷",s:8.4,src:"豆瓣",n:"经典长篇传记。"},
+    {t:"《纵横博弈天下》",a:"有关博弈论",s:8.0,src:"豆瓣",n:"博弈论思想普及。"}
+  ],
+  modern:["冯·诺依曼架构 → 所有现代计算机/手机/嵌入式","博弈论 → 经济学、拍卖设计、AI 多智能体","蒙特卡洛方法 → 金融风控、核模拟","量子公理化 → 量子计算的理论框架"]
+},
+{
+  slug:"grothendieck", rank:15, tier:3, tierName:"建筑师",
+  cn:"格罗滕迪克", en:"A. Grothendieck", years:"1928 – 2014",
+  born:"无国籍（德裔犹太）", branches:["代数","几何","拓扑"],
+  tags:["概形理论","代数几何抽象化","拒绝菲尔兹奖","隐居"],
+  summary:"以概形理论重写代数几何，1966 拒领菲尔兹奖，后隐居近四十年。",
+  cv:{ "国籍 / 时代":"法/无国籍（1928–2014）", "核心分支":"代数几何", "代表理论":"概形（Scheme）", "历史地位":"代数几何之王" },
+  timeline:[
+    {yr:"1950s–60",tx:"创立概形理论，彻底抽象化代数几何。"},
+    {yr:"1966",tx:"获菲尔兹奖但拒绝领奖（抗议苏联打压）。"},
+    {yr:"1970后",tx:"退出学界，隐居比利牛斯山近 40 年。"}
+  ],
+  contributions:[
+    "创立概形（Scheme）理论，把代数几何提升为通用语言。",
+    "发展拓扑 K-理论与同调代数工具。",
+    "其框架使韦伊猜想得以被证明，奠定现代数论几何。"
+  ],
+  works:["《代数几何原理》（EGA）","《丰收与播种》（自传/哲学）","SGA 讨论班笔记"],
+  friends:["让-皮埃尔·塞尔（巴黎挚友与合作者）","德利涅（最杰出学生，完成韦伊猜想证明）","迪斯米耶（拓扑同行，长期通信）"],
+  anecdote:"1966 年拒领菲尔兹奖；隐居后靠种地养羊为生，近 40 年未发论文，却留下改写学科的讲义。",
+  extension:"概形把「方程的解集」抽象成可任意「粘贴」的几何对象，现代密码学里的椭圆曲线，正是在他的语言里才被彻底理解。",
+  wisdom:"他是数学里的苦行僧：得到最高荣誉却转身离去。比起奖杯，他更在意数学的纯粹与良知——这种「不合时宜」，恰是天才的勋章。",
+  books:[
+    {t:"《格罗滕迪克传》",a:"相关传记",s:8.0,src:"豆瓣",n:"《孤独的数学之王》等中文本。"},
+    {t:"《代数几何初步》",a:"R. 哈茨霍恩",s:8.5,src:"Goodreads",n:"承接其框架的教材。"},
+    {t:"《数学性格》",a:"有关科学家传记",s:8.2,src:"豆瓣",n:"含其传奇人生。"}
+  ],
+  modern:["概形/代数几何 → 椭圆曲线密码（ECC，HTTPS 与区块链）","同调代数 → 现代编码与密码协议","韦伊猜想方法 → 数论与密码学前沿","K-理论 → 拓扑量子计算与指标定理"]
+},
+{
+  slug:"descartes", rank:16, tier:4, tierName:"桥梁者",
+  cn:"笛卡尔", en:"R. Descartes", years:"1596 – 1650",
+  born:"法国 · 图赖讷", branches:["几何","跨领域"],
+  tags:["解析几何","坐标系","我思故我在","代数×几何桥梁"],
+  summary:"发明解析几何，用坐标把代数与几何连成一座桥——没有它就没有微积分。",
+  cv:{ "国籍 / 时代":"法国（1596–1650）", "核心分支":"解析几何", "代表著作":"《方法论》附录《几何学》", "历史地位":"近代哲学之父" },
+  timeline:[
+    {yr:"1637",tx:"《方法论》附录《几何学》诞生解析几何。"},
+    {yr:"1641",tx:"出版《第一哲学沉思集》。"},
+    {yr:"1649",tx:"应瑞典女王之邀赴任，次年病逝。"}
+  ],
+  contributions:[
+    "创立解析几何，用坐标系把几何问题转化为代数方程。",
+    "提出「我思故我在」，开启近代哲学认识论。",
+    "其符号与变量思想深刻影响了后来的函数与微积分。"
+  ],
+  works:["《方法论》","《几何学》","《第一哲学沉思集》","《哲学原理》"],
+  friends:["马兰·梅森（数学联络员，连接欧洲学者）","伊丽莎白公主（波希米亚，长期哲学通信者）"],
+  anecdote:"传说他在梦中见苍蝇飞过天花板，灵光一现：可用苍蝇到墙的距离定位——坐标系的雏形。",
+  extension:"解析几何是「代数×几何」的第一座桥。没有它，牛顿与莱布尼茨的微积分就少了落地的坐标系；今天一切图形与数据，都活在他的网格里。",
+  wisdom:"他教会人类一件大事：把「形」翻译成「数」，世界就能被计算。从 GPS 到机器学习特征空间，都是这座桥的延伸。",
+  books:[
+    {t:"《笛卡尔传》",a:"R. Shorto / 中译",s:8.0,src:"豆瓣",n:"《伟大对话者的密码》。"},
+    {t:"《第一哲学沉思集》",a:"笛卡尔",s:8.8,src:"豆瓣",n:"哲学原典。"},
+    {t:"《世界的重新创造》",a:"有关科学革命",s:8.3,src:"豆瓣",n:"解析几何的诞生背景。"}
+  ],
+  modern:["坐标系 → 计算机图形学、CAD、GPS 定位","解析几何 → 数据可视化与科学计算","变量思想 → 函数与机器学习特征空间","几何代数化 → 机器人运动规划"]
+},
+{
+  slug:"fermat", rank:17, tier:4, tierName:"桥梁者",
+  cn:"费马", en:"P. de Fermat", years:"1601 – 1665",
+  born:"法国 · 博蒙-德洛马涅", branches:["数论","概率"],
+  tags:["费马大定理","费马小定理","概率论奠基","业余数学家之王"],
+  summary:"法官的业余爱好，留下折磨数学界 358 年的费马大定理与概率论起点。",
+  cv:{ "国籍 / 时代":"法国（1601–1665）", "核心分支":"数论 / 概率论", "代表难题":"费马大定理", "历史地位":"业余数学家之王" },
+  timeline:[
+    {yr:"1630s",tx:"在《算术》页边写下费马大定理批注。"},
+    {yr:"1654",tx:"与帕斯卡通信，奠定概率论。"},
+    {yr:"1665",tx:"去世，其子整理出版《费马全集》。"}
+  ],
+  contributions:[
+    "提出费马大定理（1994 年由怀尔斯证明），激励数论三百年。",
+    "费马小定理成为现代公钥密码的数论基石。",
+    "与帕斯卡的通信催生了概率论这一全新分支。"
+  ],
+  works:["《费马全集》（子整理）","《算术》页边批注"],
+  friends:["布莱兹·帕斯卡（概率论通信起点）","马兰·梅森（数学通信枢纽）","伯纳德·弗莱尼克尔（数论通信者）"],
+  anecdote:"他在《算术》页边写下：「我有一个真正奇妙的证明，但页边太窄写不下。」这句话折磨了数学家 358 年。",
+  extension:"费马小定理 x^{p-1}≡1(mod p) 看似精巧玩具，却是 RSA 与椭圆曲线密码天天在用的「单向函数」数学内核。",
+  wisdom:"他从不发表，只在书页边缘随手批注，却凭一己之力把数论推向前线。业余≠业余水平——热爱驱动的钻研，有时比职业更锋利。",
+  books:[
+    {t:"《费马大定理》",a:"西蒙·辛格",s:9.0,src:"豆瓣",n:"既是数学史也是费马侧传。"},
+    {t:"《费马传》",a:"M. Mahoney",s:8.0,src:"Goodreads",n:"英语世界权威传记。"},
+    {t:"《概率论基础》",a:"有关帕斯卡/费马",s:8.2,src:"豆瓣",n:"概率论起源读物。"}
+  ],
+  modern:["费马小定理 → RSA、椭圆曲线公钥密码（HTTPS/区块链）","数论 → 现代加密与数字签名","概率论起源 → 统计学、精算与 AI 概率模型","大定理证明方法 → 模形式与代数几何的交汇"]
+},
+{
+  slug:"cauchy", rank:18, tier:4, tierName:"桥梁者",
+  cn:"柯西", en:"A.-L. Cauchy", years:"1789 – 1857",
+  born:"法国 · 巴黎", branches:["分析","跨领域"],
+  tags:["ε-δ 严格化","柯西积分定理","复变函数","置换群先驱"],
+  summary:"用 ε-δ 语言把微积分从直觉变成铁证，奠定现代分析学的严谨。",
+  cv:{ "国籍 / 时代":"法国（1789–1857）", "核心分支":"数学分析 / 复变", "代表贡献":"ε-δ 定义", "历史地位":"分析严格化之父" },
+  timeline:[
+    {yr:"1821",tx:"《分析教程》首次系统给出极限与连续性严格定义。"},
+    {yr:"1825前后",tx:"提出柯西积分定理，开创复变函数论。"},
+    {yr:"1830s",tx:"因拒向新政府宣誓而漂泊，论文高产惊人。"}
+  ],
+  contributions:[
+    "用 ε-δ 语言严格化极限与连续，使微积分成为严谨学科。",
+    "提出柯西积分定理与柯西-黎曼方程，开创复变函数论。",
+    "在置换群、行列式等领域亦有奠基性工作。"
+  ],
+  works:["《分析教程》","《无穷小计算讲义》","《复变函数论》"],
+  friends:["西莫恩·泊松（科学院同僚，长期学术交流）"],
+  anecdote:"论文太多，法国科学院规定每人限印 4 页以限制他；他的 ε-δ 让充满直觉跳跃的微积分真正成为严密论证。",
+  extension:"没有柯西的严格化，微积分就只是「有用的技巧」；有了它，分析学才配称一门科学——今天每一门工程数学都建立在他定下的定义之上。",
+  wisdom:"他证明了「严格」本身就是创造力。把模糊的直觉钉进 ε 和 δ 的牢笼，看似束缚，实则释放了整个现代分析的潜能。",
+  books:[
+    {t:"《无穷之旅》",a:"伊莱·马奥尔",s:8.2,src:"豆瓣",n:"从柯西到现代的微积分史。"},
+    {t:"《复变函数史》",a:"相关学术史",s:7.8,src:"Goodreads",n:"含柯西开创章节。"},
+    {t:"《微积分概念史》",a:"卡尔·波耶",s:8.4,src:"豆瓣",n:"分析严格化脉络。"}
+  ],
+  modern:["ε-δ 严格化 → 数值分析、误差控制的理论根基","复变函数 → 电气工程、流体力学、信号处理","柯西积分 → 物理场论与积分变换","极限/连续定义 → 全部工程数学的教学标准"]
+},
+{
+  slug:"noether", rank:19, tier:4, tierName:"桥梁者",
+  cn:"诺特", en:"E. Noether", years:"1882 – 1935",
+  born:"德国 · 埃尔朗根", branches:["代数","跨领域","拓扑"],
+  tags:["抽象代数之母","诺特定理","诺特环","对称性=守恒"],
+  summary:"诺特定理把对称性与守恒定律焊在一起，是现代物理的隐藏支柱。",
+  cv:{ "国籍 / 时代":"德国（1882–1935）", "核心分支":"抽象代数 / 数学物理", "代表定理":"诺特定理", "历史地位":"抽象代数之母" },
+  timeline:[
+    {yr:"1918",tx:"证明诺特定理，对称性与守恒律深层相连。"},
+    {yr:"1921",tx:"《环中的理想论》定义诺特环，奠定交换环论。"},
+    {yr:"1933",tx:"纳粹上台后被驱逐，赴美宾大。"}
+  ],
+  contributions:[
+    "诺特定理：物理系统的每种连续对称性对应一条守恒律。",
+    "创立诺特环等概念，是抽象代数的核心骨架。",
+    "其思想深刻影响代数拓扑、代数几何与理论物理。"
+  ],
+  works:["《环中的理想论》","诺特定理论文（1918）"],
+  friends:["希尔伯特（坚定支持者，「大学不是澡堂」）","克莱因（哥廷根泰斗）","外尔（同事挚友，助其赴美）","亚历山德罗夫（苏联拓扑学家好友）"],
+  anecdote:"因性别被拒教职，希尔伯特让她以自己名义「代课」；爱因斯坦称她为「有史以来最伟大的女数学家」。",
+  extension:"能量守恒、动量守恒，本质上都是对称性的数学后果——诺特定理让我们明白：物理定律的「为何不变」，藏在几何的「对称」里。",
+  wisdom:"她以一系列论文而非厚书改变世界，证明影响力不取决于篇幅。在性别高墙前，她用纯粹的数学赢得了整个世纪的后辈。",
+  books:[
+    {t:"《诺特传》",a:"《抽象代数之母》",s:8.0,src:"豆瓣",n:"中文传记。"},
+    {t:"《对称》",a:"赫尔曼·外尔",s:8.6,src:"豆瓣",n:"诺特思想在物理中的延伸。"},
+    {t:"《物理学中的数学方法》",a:"相关教材",s:8.3,src:"豆瓣",n:"含诺特定理推导。"}
+  ],
+  modern:["诺特定理 → 粒子物理标准模型的对称性分类","守恒律 → 所有物理仿真与工程计算的约束","诺特环/交换代数 → 代数几何与编码密码","抽象代数 → 现代密码协议的结构基础"]
+},
+{
+  slug:"turing", rank:20, tier:4, tierName:"桥梁者",
+  cn:"图灵", en:"A. Turing", years:"1912 – 1954",
+  born:"英国 · 伦敦", branches:["计算","逻辑","跨领域"],
+  tags:["图灵机","可计算性","恩尼格玛","图灵测试"],
+  summary:"定义「什么是可计算」，图灵机是所有现代计算机的数学灵魂。",
+  cv:{ "国籍 / 时代":"英国（1912–1954）", "核心分支":"计算理论 / 逻辑", "代表模型":"图灵机", "历史地位":"计算机科学之父" },
+  timeline:[
+    {yr:"1936",tx:"提出图灵机，定义「可计算性」。"},
+    {yr:"1939–45",tx:"破解纳粹恩尼格玛密码，缩短二战。"},
+    {yr:"1950",tx:"提出图灵测试：「机器能思考吗？」"}
+  ],
+  contributions:[
+    "提出图灵机模型，数学上定义了「算法」与「可计算性」。",
+    "证明停机问题不可判定，划定计算的根本边界。",
+    "图灵测试开启人工智能的哲学与研究方向。"
+  ],
+  works:["《论可计算数》","《计算机器与智能》","形态发生化学论文"],
+  friends:["麦克斯·纽曼（导师，启发可计算性问题）","钱珀瑙恩（布莱切利同事，受审时力挺）","罗宾·甘迪（学生与终生好友，整理遗稿）","克里斯托弗·莫尔科姆（中学初恋挚友）"],
+  anecdote:"2013 年获女王追授赦免。你正在使用的每一行代码，最终都可归结为图灵机的运算。",
+  extension:"图灵机 + 哥德尔不完备，共同回答了一个元问题：哪些事「原则上」能被机器做完，哪些永远不能。AI 的能力边界，早被他在 1936 年画好。",
+  wisdom:"他在被时代定罪的环境里，定义了整个数字文明的底层逻辑。计算的本质、智能的边界——这些今天最热的问题，他八十多年前就给了答案的轮廓。",
+  books:[
+    {t:"《艾伦·图灵传》",a:"安德鲁·霍奇斯",s:9.1,src:"豆瓣",n:"《模仿游戏》原著。"},
+    {t:"《图灵传：谜一样的解谜者》",a:"相关传记",s:8.4,src:"豆瓣",n:"通俗生平。"},
+    {t:"《算法图解》",a:"有关计算思维",s:8.8,src:"豆瓣",n:"以图灵机讲计算本质。"}
+  ],
+  modern:["图灵机 → 所有现代计算机/编程语言的理论模型","停机问题 → 编译器与程序分析的能力边界","图灵测试 → 人工智能的哲学起点与评测范式","形态发生模型 → 计算生物学与生成式 AI 的灵感"]
+}
+];
+
+const QUOTES = {
+ euclid:[
+   {orig:"There is no royal road to geometry.", zh:"几何无王者之路。——托勒密王问学几何可有捷径，欧几里得答道。"}
+ ],
+ archimedes:[
+   {orig:"Give me a place to stand, and I shall move the Earth.", zh:"给我一个支点，我就能撬动地球。"},
+   {orig:"Eureka!（εὕρηκα）", zh:"我找到了！——相传他跃出浴缸、裸身奔街时所呼。"}
+ ],
+ newton:[
+   {orig:"If I have seen further it is by standing on the shoulders of giants.", zh:"如果说我看得比别人更远，那是因为我站在巨人的肩膀上。"},
+   {orig:"I seem to have been only like a boy playing on the sea-shore... whilst the great ocean of truth lay all undiscovered before me.", zh:"我自视如海边嬉戏的孩子，偶拾光滑贝壳，而真理的汪洋仍在眼前未启。"}
+ ],
+ leibniz:[
+   {orig:"Nihil est sine ratione.（Principium rationis sufficientis）", zh:"万物皆有充足的理由。——充足理由律。"},
+   {orig:"Music is the pleasure the human mind experiences from counting without being aware that it is counting.", zh:"音乐是灵魂在算术中隐秘的欢愉，而它并不自知自己在计数。"}
+ ],
+ euler:[
+   {orig:"Mathematicians have tried in vain to this day to discover some order in the sequence of prime numbers... a mystery into which the human mind will never penetrate.", zh:"数学家至今徒劳地试图在素数序列中发现秩序——那或许是人类心智永远无法参透的奥秘。（致哥德巴赫，1751）"},
+   {orig:"The infinitely small quantity in mathematics is actually zero.", zh:"数学中那个「无穷小量」，其实正是零。（《无穷分析引论》）"}
+ ],
+ gauss:[
+   {orig:"Mathematics is the queen of the sciences, and number theory is the queen of mathematics.", zh:"数学是科学之皇后，数论是数学之皇后。"},
+   {orig:"Pauca sed matura.", zh:"少，但要成熟。——他的治学箴言。"}
+ ],
+ galois:[
+   {orig:"Ne pleurez pas, Alfred ! J'ai besoin de tout mon courage pour mourir à vingt ans.", zh:"别哭，阿尔弗雷德！我需要鼓起全部勇气，才能在二十岁死去。——相传其临终寄语胞弟。"}
+ ],
+ riemann:[
+   {orig:"The questions of space lead us into the realm of another science, into the sphere of physics.", zh:"空间的问题，终将把我们引向另一门科学——物理学的领域。（1854 就职演讲）"}
+ ],
+ cantor:[
+   {orig:"The essence of mathematics lies in its freedom.", zh:"数学的本质，在于它的自由。"},
+   {orig:"Ich sehe es, aber ich glaube es nicht!（I see it, but I do not believe it!）", zh:"我看见了，却不敢相信！——面对集合与子集可一一对应的反直觉结论。"}
+ ],
+ poincare:[
+   {orig:"Mathematics is the art of giving the same name to different things.", zh:"数学，是「给不同的事物以相同名称」的艺术。（《科学与方法》）"},
+   {orig:"La pensée n'est qu'un éclair au milieu d'une longue nuit.", zh:"思想，只是漫漫长夜中一道转瞬即逝的闪电。"}
+ ],
+ hilbert:[
+   {orig:"Wir müssen wissen — wir werden wissen!", zh:"我们必须知道——我们终将知道！（1930 退休致辞）"},
+   {orig:"The art of doing mathematics consists in finding that special case which contains all the germs of generality.", zh:"数学的艺术，在于找到那个蕴含一切一般性的特例。"}
+ ],
+ ramanujan:[
+   {orig:"An equation means nothing to me unless it expresses a thought of God.", zh:"一个方程若不能表达神的意念，于我便毫无意义。"}
+ ],
+ godel:[
+   {orig:"The world is rational.", zh:"这个世界是合乎理性的。"},
+   {orig:"The more I think about language, the more it amazes me that people ever understand each other at all.", zh:"我越思考语言，就越惊异于人们竟能彼此理解。"}
+ ],
+ vonneumann:[
+   {orig:"If people do not believe that mathematics is simple, it is only because they do not realize how complicated life is.", zh:"若有人认为数学不简单，只因他尚未察觉生活有多复杂。"},
+   {orig:"In mathematics you don't understand things. You just get used to them.", zh:"在数学中你无需理解，只需习惯。"}
+ ],
+ grothendieck:[
+   {orig:"The unknown is not a problem to be solved, but a landscape to be explored.", zh:"未知不是待解的难题，而是待探索的风景。（据《收获与播种》意译）"},
+   {orig:"I have realized that the grandest and most revolutionary steps are the most natural and simple ones.", zh:"我渐悟：最壮阔、最革命性的跨越，往往最自然、最简朴。"}
+ ],
+ descartes:[
+   {orig:"Cogito, ergo sum.", zh:"我思，故我在。"},
+   {orig:"Il ne suffit pas d'avoir l'esprit bon, il faut l'appliquer bien.", zh:"仅有好头脑不够，还要善于运用它。"}
+ ],
+ fermat:[
+   {orig:"Cuius rei demonstrationem mirabilem sane detexi hanc marginis exiguitas non caperet.", zh:"我发现了此定理一个真正奇妙的证明，但页边太窄，写不下。"}
+ ],
+ cauchy:[
+   {orig:"As for methods, I have sought to give them all the rigor which one demands in analysis.", zh:"至于方法，我力求赋予它们分析学所要求的全部严谨。（《分析教程》序言）"}
+ ],
+ noether:[
+   {orig:"My methods are really methods of working and thinking; this is why they have crept in everywhere anonymously.", zh:"我的方法其实是工作与思考的方法——正因如此，它们才以匿名的方式，渗透到各处。"}
+ ],
+ turing:[
+   {orig:"We can only see a short distance ahead, but we can see plenty there that needs to be done.", zh:"我们目力所及仅短短一程，但已足见前路仍有万千待举。（1950）"},
+   {orig:"A machine would deserve to be called intelligent if it could deceive a human into believing it was human.", zh:"若一台机器能让人误以为它是人，它便配得上「智能」之名。——图灵测试之本意。"}
+ ]
+};
+
+function bookLink(b){
+  const t = encodeURIComponent(b.t);
+  if(b.src==="豆瓣") return "https://search.douban.com/book/subject_search?search_text="+t;
+  if(b.src==="Goodreads") return "https://www.goodreads.com/search?q="+t;
+  return "https://www.google.com/search?q="+encodeURIComponent(b.t+" 数学");
+}
+
+const BRANCH_MAP = [
+  {k:"几何学", v:["euclid","archimedes","riemann","descartes"]},
+  {k:"代数学", v:["galois","noether","grothendieck"]},
+  {k:"分析 / 微积分", v:["newton","leibniz","cauchy","riemann"]},
+  {k:"数论", v:["gauss","fermat","ramanujan"]},
+  {k:"逻辑与基础", v:["godel","cantor","turing","hilbert"]},
+  {k:"拓扑学", v:["poincare","grothendieck"]},
+  {k:"概率与统计", v:["gauss","fermat"]},
+  {k:"计算 / 计算机", v:["vonneumann","turing","leibniz"]},
+  {k:"跨领域", v:["euler","poincare","vonneumann"]}
+];
+
+const TIER_COLOR = {1:"var(--tier1)",2:"var(--tier2)",3:"var(--tier3)",4:"var(--tier4)"};
+
+const state = { q:"", tier:"", branch:"", view:"grid" };
+
+function bySlug(s){ return DATA.find(d=>d.slug===s); }
+function stars(score){
+  const full = Math.floor(score);
+  const half = (score-full)>=0.5;
+  let s = "★★★★★".slice(0,full);
+  if(half) s+="½";
+  return s;
+}
+
+function render(){
+  const q = state.q.trim().toLowerCase();
+  const list = DATA.filter(d=>{
+    if(state.tier && String(d.tier)!==state.tier) return false;
+    if(state.branch && !d.branches.includes(state.branch)) return false;
+    if(q){
+      const hay = (d.cn+d.en+d.tags.join("")+d.summary+d.branches.join("")).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const root = document.getElementById("results");
+  if(state.view==="grid"){
+    if(!list.length){ root.innerHTML = '<div class="empty">未找到匹配的数学家，试试别的关键词。</div>'; return; }
+    root.className = "grid";
+    root.innerHTML = list.map(d=>`
+      <div class="card" onclick="openDetail('${d.slug}')">
+        <div class="rank">No.${String(d.rank).padStart(2,'0')}</div>
+        <div class="tier-flag" style="color:${TIER_COLOR[d.tier]};border-color:${TIER_COLOR[d.tier]}">${d.tierName}</div>
+        <img class="portrait" src="assets/portraits/${d.slug}.png" alt="${d.cn}" loading="lazy" />
+        <h3>${d.cn}</h3>
+        <div class="en">${d.en}</div>
+        <div class="years">${d.years}</div>
+        <div class="tags">${d.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+        <div class="hl">${d.summary}</div>
+      </div>`).join("");
+  } else {
+    if(!list.length){ root.innerHTML = '<div class="empty">未找到匹配的数学家，试试别的关键词。</div>'; return; }
+    root.className = "timeline";
+    const sorted = [...list].sort((a,b)=> parseInt(a.years.match(/(\d{3,4})/)[1]) - parseInt(b.years.match(/(\d{3,4})/)[1]));
+    root.innerHTML = sorted.map(d=>`
+      <div class="tl-item" onclick="openDetail('${d.slug}')">
+        <div class="tl-dot"></div>
+        <img class="tl-thumb" src="assets/portraits/${d.slug}.png" alt="${d.cn}" loading="lazy" />
+        <div class="tl-body">
+          <h4>${d.cn}<span class="y">${d.years}</span></h4>
+          <p>${d.summary}</p>
+        </div>
+      </div>`).join("");
+  }
+}
+
+function openDetail(slug){
+  const d = bySlug(slug);
+  const m = document.getElementById("modal");
+  m.innerHTML = `
+    <button class="m-close" onclick="closeDetail()">×</button>
+    <div class="m-hero">
+      <img class="m-portrait" src="assets/portraits/${d.slug}.png" alt="${d.cn}" />
+      <div class="m-head">
+        <h2>${d.cn}</h2>
+        <div class="en">${d.en} · 第 ${d.rank} 位 · ${d.tierName}</div>
+        <div class="meta">
+          <span>${d.years}</span>
+          <span>${d.born}</span>
+          <span>${d.branches.join(" / ")}</span>
+        </div>
+      </div>
+    </div>
+    <div class="m-body">
+      <div class="sec">
+        <div class="sec-h"><span class="n">01</span><h3>一句话</h3></div>
+        <p>${d.summary}</p>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">02</span><h3>详细数据</h3></div>
+        <div class="cv-grid">
+          ${Object.entries(d.cv).map(([k,v])=>`<div class="cv"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("")}
+          <div class="cv"><div class="k">主要标签</div><div class="v">${d.tags.join(" · ")}</div></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">03</span><h3>关键年表</h3></div>
+        <div class="tl-mini">
+          ${d.timeline.map(e=>`<div class="ev"><div class="yr">${e.yr}</div><div class="tx">${e.tx}</div></div>`).join("")}
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">04</span><h3>核心贡献</h3></div>
+        <ul class="li">${d.contributions.map(c=>`<li>${c}</li>`).join("")}</ul>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">05</span><h3>代表著作</h3></div>
+        <div class="chips">${d.works.map(w=>`<span class="chip">${w}</span>`).join("")}</div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">06</span><h3>朋辈与人际</h3></div>
+        <div class="chips">${d.friends.map(f=>`<span class="chip">${f}</span>`).join("")}</div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">07</span><h3>事迹 · 相关拓展</h3></div>
+        <p><b style="color:var(--gold-soft)">事迹｜</b>${d.anecdote}</p>
+        <p style="margin-top:10px"><b style="color:var(--gold-soft)">拓展｜</b>${d.extension}</p>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">08</span><h3>经典言论</h3></div>
+        <div class="quotes">
+          ${(QUOTES[d.slug]||[]).map(q=>`
+            <blockquote class="quote">
+              <div class="q-orig">${q.orig}</div>
+              <div class="q-zh">${q.zh}</div>
+            </blockquote>`).join("")}
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">09</span><h3>智评</h3></div>
+        <div class="wisdom">${d.wisdom}<span class="who">— 编者评点</span></div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">10</span><h3>市场高分书作</h3></div>
+        <div class="books">
+          ${d.books.map(b=>`
+            <a class="book" href="${bookLink(b)}" target="_blank" rel="noopener">
+              <div class="bt">${b.t}</div>
+              <div class="ba">${b.a}</div>
+              <div class="br"><span class="stars">${stars(b.s)}</span><span class="score">${b.s.toFixed(1)}</span><span class="src">${b.src}</span></div>
+              <div class="bn">${b.n}</div>
+              <div class="blink">在 ${b.src} 查看 / 购买 ↗</div>
+            </a>`).join("")}
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><span class="n">11</span><h3>学科对当今科学的推动与应用</h3></div>
+        <ul class="li">${d.modern.map(x=>`<li>${x}</li>`).join("")}</ul>
+      </div>
+    </div>`;
+  document.getElementById("overlay").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeDetail(){
+  document.getElementById("overlay").classList.remove("open");
+  document.body.style.overflow="";
+}
+
+document.getElementById("q").addEventListener("input", e=>{ state.q=e.target.value; render(); });
+document.getElementById("fTier").addEventListener("change", e=>{ state.tier=e.target.value; render(); });
+document.getElementById("fBranch").addEventListener("change", e=>{ state.branch=e.target.value; render(); });
+document.querySelectorAll("#viewSeg button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll("#viewSeg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); state.view=b.dataset.v; render();
+  });
+});
+document.getElementById("overlay").addEventListener("click", e=>{ if(e.target.id==="overlay") closeDetail(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeDetail(); });
+
+// branch map
+document.getElementById("branchMap").innerHTML = BRANCH_MAP.map(r=>`
+  <div class="bm-row">
+    <div class="bk">${r.k}</div>
+    <div class="bv">${r.v.map(s=>`<span class="bm-pill" onclick="jumpTo('${s}')">${bySlug(s).cn}</span>`).join("")}</div>
+  </div>`).join("");
+function jumpTo(slug){
+  const d = bySlug(slug);
+  state.q=""; state.tier=""; state.branch="";
+  document.getElementById("q").value="";
+  document.getElementById("fTier").value="";
+  document.getElementById("fBranch").value="";
+  render();
+  openDetail(slug);
+}
+
+render();
+</script>
+</body>
+</html>
