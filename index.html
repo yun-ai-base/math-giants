@@ -4,9 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>数学史上的二十位巨人 · 可视化图谱</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+<meta name="description" content="从欧几里得到图灵——二十位重塑人类理性边界的大脑：肖像、年表、智评、高分书作与当今科学应用，一图尽览。" />
+<meta property="og:site_name" content="数学史上的二十位巨人 · 可视化图谱" />
+<meta property="og:title" content="数学史上的二十位巨人 · 可视化图谱" />
+<meta property="og:description" content="从欧几里得到图灵——二十位重塑人类理性边界的大脑：肖像、年表、智评、高分书作与当今科学应用。" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://yun-ai-base.github.io/math-giants/" />
+<meta property="og:image" content="https://yun-ai-base.github.io/math-giants/assets/og-cover.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="数学史上的二十位巨人 · 可视化图谱" />
+<meta name="twitter:description" content="二十位重塑数学史的巨人：肖像、年表、智评、高分书作与当今科学应用。" />
+<meta name="twitter:image" content="https://yun-ai-base.github.io/math-giants/assets/og-cover.png" />
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
 <style>
   :root{
     --ink:#0c0e12;
@@ -34,7 +43,7 @@
       radial-gradient(900px 600px at 0% 100%, rgba(120,140,180,0.08), transparent 55%),
       var(--ink);
     color:var(--cream);
-    font-family:"Noto Sans SC",-apple-system,"Segoe UI",sans-serif;
+    font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;
     font-weight:300;
     letter-spacing:0.02em;
     line-height:1.7;
@@ -52,7 +61,7 @@
     color:var(--gold);font-size:14px;font-weight:600;margin-bottom:18px;
   }
   .hero h1{
-    font-family:"Noto Serif SC","Cormorant Garamond",serif;
+    font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;
     font-weight:700;font-size:clamp(34px,5.4vw,62px);
     line-height:1.12;color:var(--cream);
     text-shadow:0 2px 30px rgba(200,169,106,0.18);
@@ -136,7 +145,7 @@
     border-radius:8px;padding:2px 8px;background:rgba(0,0,0,0.3);letter-spacing:0.1em;
   }
   .tier-flag{position:absolute;top:14px;right:14px;font-size:11px;letter-spacing:0.12em;padding:3px 9px;border-radius:8px;border:1px solid var(--line);}
-  .card h3{font-family:"Noto Serif SC",serif;font-weight:700;font-size:19px;text-align:center;margin-top:2px;}
+  .card h3{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-weight:700;font-size:19px;text-align:center;margin-top:2px;}
   .card .en{text-align:center;color:var(--muted);font-size:12px;font-style:italic;font-family:"Cormorant Garamond",serif;letter-spacing:0.04em;margin-top:2px;}
   .card .years{text-align:center;color:var(--gold-soft);font-size:12.5px;margin-top:6px;font-family:"Cormorant Garamond",serif;font-weight:600;}
   .card .tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px;}
@@ -152,7 +161,7 @@
   .tl-item:hover{background:var(--panel);}
   .tl-dot{position:absolute;left:11px;top:26px;width:16px;height:16px;border-radius:50%;background:var(--ink);border:2px solid var(--gold);box-shadow:0 0 0 4px rgba(200,169,106,0.12);}
   .tl-thumb{width:54px;height:68px;border-radius:8px;object-fit:cover;border:1px solid var(--gold-dim);flex:none;background:#1a1d24;}
-  .tl-body h4{font-family:"Noto Serif SC",serif;font-size:16px;font-weight:700;}
+  .tl-body h4{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:16px;font-weight:700;}
   .tl-body .y{color:var(--gold-soft);font-family:"Cormorant Garamond",serif;font-size:13px;margin-left:8px;}
   .tl-body p{color:var(--muted);font-size:13px;margin-top:3px;}
 
@@ -174,7 +183,7 @@
   .m-hero{position:relative;display:flex;gap:26px;padding:34px 34px 26px;align-items:center;
     background:radial-gradient(700px 240px at 18% 0%,rgba(200,169,106,0.16),transparent 70%);border-bottom:1px solid var(--line);}
   .m-portrait{width:128px;height:160px;border-radius:14px;object-fit:cover;border:1px solid var(--gold-dim);box-shadow:0 18px 40px -18px rgba(0,0,0,0.9);flex:none;background:#1a1d24;}
-  .m-head h2{font-family:"Noto Serif SC",serif;font-size:30px;font-weight:700;line-height:1.1;}
+  .m-head h2{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:30px;font-weight:700;line-height:1.1;}
   .m-head .en{color:var(--muted);font-style:italic;font-family:"Cormorant Garamond",serif;font-size:16px;margin-top:3px;}
   .m-head .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
   .m-head .meta span{font-size:12px;color:var(--gold-soft);border:1px solid var(--line);border-radius:20px;padding:3px 11px;background:rgba(255,255,255,0.02);}
@@ -184,10 +193,10 @@
   .sec{margin-top:26px;}
   .sec-h{display:flex;align-items:center;gap:10px;margin-bottom:13px;}
   .sec-h .n{font-family:"Cormorant Garamond",serif;color:var(--gold);font-size:14px;letter-spacing:0.2em;}
-  .sec-h h3{font-family:"Noto Serif SC",serif;font-size:17px;font-weight:700;color:var(--gold-soft);}
+  .sec-h h3{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:17px;font-weight:700;color:var(--gold-soft);}
   .sec-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);}
   .theory-box{margin-top:18px;border-left:2px solid var(--gold-dim);background:linear-gradient(90deg,rgba(212,175,55,0.06),transparent);border-radius:0 12px 12px 0;padding:15px 17px;}
-  .tb-h{font-family:"Noto Serif SC",serif;font-size:14px;font-weight:700;color:var(--gold-soft);margin-bottom:13px;letter-spacing:.03em;}
+  .tb-h{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:14px;font-weight:700;color:var(--gold-soft);margin-bottom:13px;letter-spacing:.03em;}
   .ti{margin-bottom:15px;}
   .ti:last-child{margin-bottom:0;}
   .ti-t{font-size:14.5px;font-weight:700;color:var(--cream);margin-bottom:5px;}
@@ -221,7 +230,7 @@
   .quote{border-left:3px solid var(--gold);padding:12px 16px;background:rgba(200,169,106,0.06);border-radius:0 12px 12px 0;}
   .q-orig{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;color:var(--gold-soft);line-height:1.45;}
   .q-zh{font-size:14px;color:#d6d2c8;margin-top:6px;font-weight:300;}
-  .book .bt{font-family:"Noto Serif SC",serif;font-size:15px;font-weight:700;color:var(--cream);}
+  .book .bt{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:15px;font-weight:700;color:var(--cream);}
   .book .ba{font-size:12px;color:var(--muted);margin-top:3px;font-style:italic;}
   .book .br{display:flex;align-items:center;gap:8px;margin-top:9px;}
   .stars{color:var(--gold);font-size:13px;letter-spacing:1px;}
@@ -235,36 +244,68 @@
   .chips{display:flex;flex-wrap:wrap;gap:8px;}
   .chip{font-size:12.5px;color:#d6d2c8;border:1px solid var(--line);border-radius:10px;padding:7px 12px;background:var(--panel);}
 
+  /* ---------- TIMELINE BAND ---------- */
+  .era{margin-top:54px;}
+  .era h2{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
+  .era p.cap{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px;}
+  .era-axis{display:flex;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:6px;color:var(--muted);font-size:11px;font-family:"Cormorant Garamond",serif;letter-spacing:0.04em;}
+  .era-axis .a-spacer-l{flex:none;width:174px;}
+  .era-axis .a-track{flex:1;position:relative;height:14px;}
+  .era-axis .a-mark{position:absolute;bottom:0;transform:translateX(-50%);white-space:nowrap;}
+  .era-axis .a-mark::before{content:"";display:block;width:1px;height:6px;background:var(--line);margin:0 auto 4px;}
+  .era-row{display:flex;align-items:center;padding:5px 4px;cursor:pointer;border-radius:8px;transition:.2s;}
+  .era-row:hover,.era-row:focus-visible{background:var(--panel);outline:none;}
+  .era-row:hover .era-bar{opacity:1;}
+  .era-row .era-n{flex:none;width:34px;color:var(--gold);font-family:"Cormorant Garamond",serif;font-size:12px;text-align:center;letter-spacing:0.04em;}
+  .era-row .era-name{flex:none;width:140px;font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:14px;color:var(--cream);font-weight:600;}
+  .era-row .era-name small{display:block;color:var(--muted);font-size:10.5px;font-weight:400;font-style:italic;letter-spacing:0.04em;}
+  .era-row .era-track{flex:1;position:relative;height:20px;}
+  .era-row .era-bar{position:absolute;top:3px;bottom:3px;border-radius:3px;opacity:0.75;transition:.2s;}
+  .era-row .era-yrs{flex:none;width:80px;color:var(--muted);font-size:12px;text-align:right;font-family:"Cormorant Garamond",serif;}
+  .era-ancient{margin-top:24px;padding:16px 18px;border:1px solid var(--line);border-radius:13px;background:var(--panel);}
+  .era-ancient h4{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:13px;color:var(--gold-soft);letter-spacing:0.16em;margin-bottom:10px;font-weight:600;}
+  .era-ancient .ae-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;color:var(--muted);font-size:13px;border-bottom:1px solid rgba(200,169,106,0.08);}
+  .era-ancient .ae-row:last-child{border-bottom:0;}
+  .era-ancient .ae-row b{color:var(--cream);font-weight:600;font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:14px;}
+  .era-ancient .ae-row .a-link{color:var(--gold-soft);cursor:pointer;transition:.2s;}
+  .era-ancient .ae-row .a-link:hover{color:var(--gold);text-decoration:underline;}
+  @media(max-width:640px){
+    .era-row .era-name{width:90px;font-size:12.5px;}
+    .era-row .era-n{display:none;}
+    .era-axis .a-spacer-l{width:90px;}
+    .era-row .era-yrs{display:none;}
+  }
+
   /* ---------- BRANCH MAP ---------- */
   .branch-map{margin-top:54px;}
-  .branch-map h2{font-family:"Noto Serif SC",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
+  .branch-map h2{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
   .branch-map p.cap{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px;}
   .bm-row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(200,169,106,0.12);}
-  .bm-row .bk{flex:none;width:120px;font-family:"Noto Serif SC",serif;color:var(--gold-soft);font-size:15px;font-weight:700;padding-top:4px;}
+  .bm-row .bk{flex:none;width:120px;font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;color:var(--gold-soft);font-size:15px;font-weight:700;padding-top:4px;}
   .bm-row .bv{display:flex;flex-wrap:wrap;gap:9px;}
   .bm-pill{font-size:13px;color:var(--cream);border:1px solid var(--line);border-radius:20px;padding:5px 14px;background:var(--panel);cursor:pointer;transition:.2s;}
   .bm-pill:hover{border-color:var(--gold);color:var(--gold-soft);}
 
   /* ---------- LEGENDS ---------- */
   .legends{margin-top:54px;}
-  .legends h2{font-family:"Noto Serif SC",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
+  .legends h2{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
   .legends p.cap{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px;}
   .lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   @media(max-width:820px){.lg-grid{grid-template-columns:1fr;}}
   .lg-item{border:1px solid var(--line);border-radius:13px;padding:15px 17px;background:linear-gradient(180deg,var(--panel-2),var(--panel));}
-  .lg-item .lg-name{font-family:"Noto Serif SC",serif;font-size:15px;font-weight:700;color:var(--cream);}
+  .lg-item .lg-name{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:15px;font-weight:700;color:var(--cream);}
   .lg-item .lg-name span{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px;font-family:"Cormorant Garamond",serif;letter-spacing:0.04em;}
   .lg-item .lg-d{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.8;}
   .lg-item .lg-tag{display:inline-block;margin-top:9px;font-size:11px;color:var(--gold-soft);border:1px solid var(--line);border-radius:20px;padding:2px 10px;}
 
   /* ---------- AWARDS ---------- */
   .awards{margin-top:54px;}
-  .awards h2{font-family:"Noto Serif SC",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
+  .awards h2{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
   .awards p.cap{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px;}
   .aw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
   @media(max-width:900px){.aw-grid{grid-template-columns:1fr;}}
   .aw-item{border:1px solid var(--line);border-radius:15px;padding:19px 19px 17px;background:linear-gradient(180deg,var(--panel-2),var(--panel));display:flex;flex-direction:column;}
-  .aw-item .aw-name{font-family:"Noto Serif SC",serif;font-size:16px;font-weight:700;color:var(--cream);}
+  .aw-item .aw-name{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:16px;font-weight:700;color:var(--cream);}
   .aw-item .aw-name span{display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin-top:3px;letter-spacing:0.04em;}
   .aw-item .aw-badge{display:inline-block;margin:10px 0 10px;font-size:11px;color:var(--gold-soft);border:1px solid var(--gold-dim);border-radius:20px;padding:3px 11px;align-self:flex-start;}
   .aw-item .aw-d{font-size:13px;color:var(--muted);line-height:1.85;flex:1;}
@@ -320,6 +361,10 @@
   }
 
   /* ---------- 增强组件 ---------- */
+  .filter-bar{margin:0 0 16px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel);display:flex;align-items:center;gap:12px;font-size:13px;color:var(--cream);}
+  .filter-bar b{color:var(--gold-soft);font-weight:600;}
+  .filter-bar .x{cursor:pointer;color:var(--muted);padding:2px 10px;border:1px solid var(--line);border-radius:20px;transition:.2s;background:transparent;font-family:inherit;font-size:12px;}
+  .filter-bar .x:hover{border-color:var(--gold);color:var(--gold-soft);}
   ::-webkit-scrollbar{width:10px;height:10px;}
   ::-webkit-scrollbar-track{background:transparent;}
   ::-webkit-scrollbar-thumb{background:rgba(200,169,106,0.28);border-radius:6px;border:2px solid var(--ink);}
@@ -337,15 +382,19 @@
   .method .tier-legend span{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--line);}
 
   .insights{margin-top:54px;}
-  .insights h2{font-family:"Noto Serif SC",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
+  .insights h2{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
   .insights p.cap{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px;}
   .ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
   @media(max-width:820px){.ins-grid{grid-template-columns:1fr;}}
   .ins-card{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,var(--panel-2),var(--panel));padding:20px 22px;}
-  .ins-card h3{font-family:"Noto Serif SC",serif;font-size:15px;color:var(--cream);margin-bottom:16px;display:flex;justify-content:space-between;align-items:baseline;}
+  .ins-card h3{font-family:"Cormorant Garamond","Noto Serif SC","Songti SC","SimSun",serif;font-size:15px;color:var(--cream);margin-bottom:16px;display:flex;justify-content:space-between;align-items:baseline;}
   .ins-card h3 small{font-size:11px;color:var(--muted-2);font-weight:400;font-family:"Noto Sans SC",sans-serif;}
-  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px;font-size:12.5px;}
-  .bar-row .bk{flex:none;width:78px;color:var(--muted);text-align:right;}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px;font-size:12.5px;cursor:pointer;border-radius:8px;padding:2px 4px;transition:.2s;}
+  .bar-row:hover{background:rgba(200,169,106,0.08);}
+  .bar-row.on{background:rgba(200,169,106,0.12);}
+  .bar-row.on .bfill{background:linear-gradient(90deg,var(--gold),var(--gold-soft));}
+  .bar-row.on .bk{color:var(--cream);font-weight:600;}
+  .bar-row .bk{flex:none;width:78px;color:var(--muted);text-align:right;transition:.2s;}
   .bar-row .btrack{flex:1;height:16px;border-radius:8px;background:rgba(255,255,255,0.05);overflow:hidden;}
   .bar-row .bfill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--gold-dim),var(--gold));opacity:.85;transition:width .8s cubic-bezier(.2,.8,.2,1);}
   .bar-row .bn{flex:none;width:26px;color:var(--gold-soft);font-family:"Cormorant Garamond",serif;font-weight:700;font-size:14px;}
@@ -427,6 +476,7 @@
     </div>
   </div>
 
+  <div id="filterBar"></div>
   <div id="results"></div>
 
   <section class="insights">
@@ -441,6 +491,16 @@
         <h3>分支人数 <small>一人可属多分支</small></h3>
         <div id="branchChart"></div>
       </div>
+    </div>
+  </section>
+
+  <section class="era">
+    <h2>同时代 · 时间带</h2>
+    <p class="cap">1550–2020 跨度，十八位巨人的寿命条叠加——一眼看出谁与谁重叠半个世纪</p>
+    <div id="eraChart"></div>
+    <div class="era-ancient">
+      <h4>古代 · 公元前</h4>
+      <div id="eraAncient"></div>
     </div>
   </section>
 
@@ -491,7 +551,7 @@ function bookLink(b){
 
 const TIER_COLOR = {1:"var(--tier1)",2:"var(--tier2)",3:"var(--tier3)",4:"var(--tier4)"};
 
-const state = { q:"", tier:"", branch:"", view:"grid" };
+const state = { q:"", tier:"", branch:"", era:"", view:"grid" };
 
 function bySlug(s){ return DATA.find(d=>d.slug===s); }
 function stars(score){
@@ -519,6 +579,7 @@ function syncURL(){
   if(state.q) p.set("q",state.q);
   if(state.tier) p.set("tier",state.tier);
   if(state.branch) p.set("branch",state.branch);
+  if(state.era) p.set("era",state.era);
   if(state.view!=="grid") p.set("view",state.view);
   const qs = p.toString();
   history.replaceState(null,"",location.pathname+(qs?"?"+qs:"")+(location.hash||""));
@@ -529,6 +590,7 @@ function render(){
   const list = DATA.filter(d=>{
     if(state.tier && String(d.tier)!==state.tier) return false;
     if(state.branch && !d.branches.includes(state.branch)) return false;
+    if(state.era!=="" && centuryOf(d.years)!==+state.era) return false;
     if(q){
       const hay = (d.cn+d.en+d.tags.join("")+d.summary+d.branches.join("")).toLowerCase();
       if(!hay.includes(q)) return false;
@@ -569,6 +631,8 @@ function render(){
       </div>`).join("");
   }
   syncURL();
+  renderFilterBar();
+  if(state.era!=="" && document.getElementById("centuryChart")) renderCharts();
 }
 
 let lastFocused = null;
@@ -688,6 +752,8 @@ function openDetail(slug){
         <div class="sec-h"><span class="n">11</span><h3>学科对当今科学的推动与应用</h3></div>
         <ul class="li">${d.modern.map(x=>`<li>${x}</li>`).join("")}</ul>
       </div>
+
+      ${renderRelated(d)}
 
       <div class="nav-row">
         <button class="nav-btn" onclick="openDetail('${prevD.slug}')" aria-label="上一位：${prevD.cn}"><span class="np">← 上一位</span>${prevD.cn}</button>
@@ -810,20 +876,68 @@ document.getElementById("awardsGrid").innerHTML = AWARDS.map(a=>`
     <div class="aw-links">${a.links}</div>
   </div>`).join("");
 
+// 共享：从 years 字符串派生出生世纪（公元前为负整数）
+function centuryOf(years){
+  const bc = years.match(/前\s*(\d+)/);
+  if(bc){ const y=parseInt(bc[1]); return -Math.floor((y-1)/100)-1; }
+  const n = parseInt((years.match(/(\d{3,4})/)||[])[1])||0;
+  return Math.floor((n-1)/100)+1;
+}
+
+// 同时代时间带
+const ERA_MIN=1550, ERA_MAX=2020, ERA_SPAN=ERA_MAX-ERA_MIN;
+function spanOf(years){
+  // "约前325 – 前265" / "1643 – 1727" / "1906 – 1978"
+  const m = years.match(/前\s*(\d+)\s*[–-]\s*前\s*(\d+)/);
+  if(m){ const a=+m[1], b=+m[2]; return [Math.max(a,b), Math.min(a,b)]; } // 返回 [生, 死]（含边界）
+  const m2 = years.match(/(\d{3,4})\s*[–-]\s*(\d{3,4})/);
+  if(m2) return [+m2[1], +m2[2]];
+  return null;
+}
+function renderEra(){
+  const groups = [[], []]; // [现代18人按rank, 古代2人]
+  DATA.forEach(d=>{
+    const s = spanOf(d.years);
+    if(!s) return;
+    if(s[0]<1550){ groups[1].push({d, s}); } // 出生<1550 视为古代
+    else { groups[0].push({d, s}); }
+  });
+  groups[0].sort((a,b)=>a.d.rank-b.d.rank);
+  // 顶部刻度
+  const ticks = [1550,1650,1750,1850,1950];
+  const axis = `<div class="era-axis"><div class="a-spacer-l"></div><div class="a-track">${
+    ticks.map(t=>`<span class="a-mark" style="left:${(t-ERA_MIN)/ERA_SPAN*100}%">${t}</span>`).join("")
+  }</div></div>`;
+  const rows = groups[0].map(({d,s})=>{
+    const left=(s[0]-ERA_MIN)/ERA_SPAN*100;
+    const w=(s[1]-s[0])/ERA_SPAN*100;
+    const tierColor = TIER_COLOR[d.tier] || "var(--gold)";
+    return `<div class="era-row" tabindex="0" role="button" aria-label="查看 ${d.cn} 详档" onclick="openDetail('${d.slug}')">
+      <span class="era-n">No.${String(d.rank).padStart(2,'0')}</span>
+      <span class="era-name">${d.cn}<small>${d.en}</small></span>
+      <div class="era-track"><div class="era-bar" style="left:${left.toFixed(2)}%;width:${Math.max(w,0.5).toFixed(2)}%;background:${tierColor}"></div></div>
+      <span class="era-yrs">${s[0]} – ${s[1]}</span>
+    </div>`;
+  }).join("");
+  document.getElementById("eraChart").innerHTML = axis + rows;
+  // 古代 2 人
+  document.getElementById("eraAncient").innerHTML = groups[1].map(({d,s})=>{
+    const yrLabel = `约前${s[0]} – 前${s[1]}`;
+    return `<div class="ae-row">
+      <span><b>${d.cn}</b>　${yrLabel}　${d.en}</span>
+      <span class="a-link" onclick="openDetail('${d.slug}')">详档 ↗</span>
+    </div>`;
+  }).join("");
+}
+
 // 数据概览图表
 const BRANCH_FULL = {几何:"几何学",代数:"代数学",分析:"分析 / 微积分",数论:"数论",逻辑:"逻辑与基础",拓扑:"拓扑学",概率:"概率与统计",计算:"计算 / 计算机",跨领域:"跨领域"};
 function renderCharts(){
-  const centuryOf = s => {
-    const bc = s.match(/前\s*(\d+)/);
-    if(bc){ const y=parseInt(bc[1]); return -Math.floor((y-1)/100)-1; }
-    const n = parseInt((s.match(/(\d{3,4})/)||[])[1])||0;
-    return Math.floor((n-1)/100)+1;
-  };
   const agg = DATA.reduce((m,d)=>{ const c=centuryOf(d.years); m[c]=(m[c]||0)+1; return m; },{});
   const rows = Object.entries(agg).sort((a,b)=>a[0]-b[0]);
   const max = Math.max(...rows.map(r=>r[1]));
   document.getElementById("centuryChart").innerHTML = rows.map(([c,n])=>`
-    <div class="bar-row">
+    <div class="bar-row${state.era===c?" on":""}" onclick="filterEra(${c})" title="筛选 ${+c<0?"公元前"+(-c)+"世纪":c+"世纪"} 出生的人物">
       <div class="bk">${+c<0?"公元前"+(-c)+"世纪":c+"世纪"}</div>
       <div class="btrack"><div class="bfill" style="width:${(n/max*100).toFixed(1)}%"></div></div>
       <div class="bn">${n}</div>
@@ -839,12 +953,41 @@ function renderCharts(){
     </div>`).join("");
 }
 
+// 世纪筛选联动
+function filterEra(c){
+  state.era = state.era===c ? "" : c;
+  render();
+}
+function renderFilterBar(){
+  if(!state.era){ const b=document.getElementById("filterBar"); if(b) b.innerHTML=""; return; }
+  const label = +state.era<0 ? "公元前"+(-state.era)+"世纪" : state.era+"世纪";
+  document.getElementById("filterBar").innerHTML =
+    `<span>当前筛选：<b>${label}</b> 出生的人物</span>`+
+    `<button class="x" onclick="state.era='';render();">清除</button>`;
+}
+
+// 同分支其他巨人推荐
+function renderRelated(d){
+  const others = DATA.filter(x=>x.slug!==d.slug && x.branches.some(b=>d.branches.includes(b)));
+  others.sort((a,b)=>a.rank-b.rank);
+  const picks = others.slice(0,4);
+  if(!picks.length) return "";
+  return `<div class="sec">
+    <div class="sec-h"><span class="n">12</span><h3>同分支 · 其他巨人</h3></div>
+    <div class="chips">${picks.map(x=>{
+      const shared = x.branches.filter(b=>d.branches.includes(b));
+      return `<span class="chip link" role="button" tabindex="0" onclick="openDetail('${x.slug}')" title="${x.cn} · 共同分支：${BRANCH_FULL[shared[0]]||shared[0]}">${x.cn}</span>`;
+    }).join("")}</div>
+  </div>`;
+}
+
 // 初始化：从 URL 还原筛选与详情
 (function initFromURL(){
   const p = new URLSearchParams(location.search);
   if(p.get("q")){ state.q=p.get("q"); document.getElementById("q").value=state.q; }
   if(p.get("tier")){ state.tier=p.get("tier"); document.getElementById("fTier").value=state.tier; }
   if(p.get("branch")){ state.branch=p.get("branch"); document.getElementById("fBranch").value=state.branch; }
+  if(p.get("era")){ state.era=p.get("era"); }
   if(p.get("view")==="timeline"){
     state.view="timeline";
     document.querySelectorAll("#viewSeg button").forEach(b=>{ b.classList.toggle("on", b.dataset.v==="timeline"); b.setAttribute("aria-pressed", b.dataset.v==="timeline"); });
@@ -852,6 +995,7 @@ function renderCharts(){
 })();
 render();
 renderCharts();
+renderEra();
 const initSlug = location.hash.replace(/^#/,"");
 if(initSlug && bySlug(initSlug)) openDetail(initSlug);
 </script>
