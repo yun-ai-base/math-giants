@@ -270,6 +270,8 @@
   .aw-item .aw-d{font-size:13px;color:var(--muted);line-height:1.85;flex:1;}
   .aw-item .aw-d b{color:var(--cream);font-weight:500;}
   .aw-item .aw-links{margin-top:12px;font-size:11.5px;color:var(--gold);opacity:.9;line-height:1.8;border-top:1px solid rgba(200,169,106,0.14);padding-top:10px;}
+  .aw-item .aw-links .aw-link{color:var(--gold-soft);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .aw-item .aw-links .aw-link:hover{color:var(--gold);}
   .aw-note{margin-top:20px;border-left:2px solid var(--gold-dim);background:rgba(200,169,106,0.05);border-radius:0 12px 12px 0;padding:13px 17px;font-size:12.8px;color:var(--muted);line-height:1.9;}
 
   footer{margin-top:60px;text-align:center;color:var(--muted-2);font-size:12px;line-height:1.9;}
@@ -790,9 +792,9 @@ document.getElementById("legendsGrid").innerHTML = LEGENDS.map(x=>`
 
 // 当代数学三大奖
 const AWARDS = [
-  {n:"菲尔兹奖", y:"1936 年设立 · 每 4 年一届", badge:"40 岁以下新星 · 「数学界的诺贝尔奖」",
+  {n:"菲尔兹奖", y:"1936 年设立 · 自 1950 年起每 4 年一届", badge:"40 岁以下新星 · 「数学界的诺贝尔奖」",
    d:"国际数学联盟颁发，每届 2–4 人，限 40 岁以下——奖励青年数学家已完成的突破。",
-   links:"正榜关联：<b>格罗滕迪克</b> 1966 年获奖后拒领（抗议苏联打压）。华人得主 <b>丘成桐</b>（1982）、<b>陶哲轩</b>（2006）；<b>佩雷尔曼</b>（2006）亦拒领。"},
+   links:"正榜关联：<b>格罗滕迪克</b> 1966 年获奖后拒领（抗议苏联打压）；<b>佩雷尔曼</b>（2006）亦拒领。华人得主 <b>丘成桐</b>（1982）、<b>陶哲轩</b>（2006）。<br><b>2026：王虹、邓煜</b>——中国籍数学家首次获奖（王虹为史上第三位女性得主）；王虹与合作者证明三维挂谷猜想，邓煜与合作者攻克狭义<span class=\"aw-link\" onclick=\"openDetail('hilbert')\">希尔伯特第六问题</span>（1900 年希尔伯特提出，见其详档）。"},
   {n:"沃尔夫奖", y:"1978 年设立 · 每年一届", badge:"终身成就 · 以色列沃尔夫基金会",
    d:"数学与物理、化学等并列授奖，表彰毕生成就——常授给功成名就的资深大师。",
    links:"遗珠关联：<b>陈省身</b> 1984 年获奖，首位华人得主；<b>丘成桐</b> 2010 年再获。"},
