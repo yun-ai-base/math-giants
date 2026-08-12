@@ -245,6 +245,18 @@
   .bm-pill{font-size:13px;color:var(--cream);border:1px solid var(--line);border-radius:20px;padding:5px 14px;background:var(--panel);cursor:pointer;transition:.2s;}
   .bm-pill:hover{border-color:var(--gold);color:var(--gold-soft);}
 
+  /* ---------- LEGENDS ---------- */
+  .legends{margin-top:54px;}
+  .legends h2{font-family:"Noto Serif SC",serif;font-size:22px;text-align:center;color:var(--gold-soft);margin-bottom:6px;}
+  .legends p.cap{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px;}
+  .lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:820px){.lg-grid{grid-template-columns:1fr;}}
+  .lg-item{border:1px solid var(--line);border-radius:13px;padding:15px 17px;background:linear-gradient(180deg,var(--panel-2),var(--panel));}
+  .lg-item .lg-name{font-family:"Noto Serif SC",serif;font-size:15px;font-weight:700;color:var(--cream);}
+  .lg-item .lg-name span{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px;font-family:"Cormorant Garamond",serif;letter-spacing:0.04em;}
+  .lg-item .lg-d{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.8;}
+  .lg-item .lg-tag{display:inline-block;margin-top:9px;font-size:11px;color:var(--gold-soft);border:1px solid var(--line);border-radius:20px;padding:2px 10px;}
+
   footer{margin-top:60px;text-align:center;color:var(--muted-2);font-size:12px;line-height:1.9;}
   footer .div{width:60px;height:1px;background:var(--line);margin:0 auto 18px;}
   .empty{text-align:center;color:var(--muted);padding:60px 0;font-size:15px;}
@@ -419,6 +431,12 @@
     <h2>分支代表人物速查</h2>
     <p class="cap">点击任一学者，跳转至其详档</p>
     <div id="branchMap"></div>
+  </section>
+
+  <section class="legends">
+    <h2>遗珠速览 · 未入正榜的重量级</h2>
+    <p class="cap">或与正榜主题重叠、或因篇幅所限——数学史上不可绕过的名字，特此致敬</p>
+    <div id="legendsGrid" class="lg-grid"></div>
   </section>
 
   <footer>
@@ -729,6 +747,24 @@ function jumpTo(slug){
   render();
   openDetail(slug);
 }
+
+// 遗珠速览（未入正榜的重量级）
+const LEGENDS = [
+  {n:"帕斯卡", en:"Blaise Pascal", y:"1623 – 1662", c:"法国", tag:"概率论", d:"与费马的通信共同奠基概率论；帕斯卡三角（二项式系数）沿用至今。"},
+  {n:"阿贝尔", en:"N. H. Abel", y:"1802 – 1829", c:"挪威", tag:"代数", d:"与伽罗瓦独立证明五次方程不可根式求解；阿贝尔群、阿贝尔积分，26 岁因肺结核早逝。"},
+  {n:"哈密顿", en:"W. R. Hamilton", y:"1805 – 1865", c:"爱尔兰", tag:"数学物理", d:"发明四元数，开创向量分析；哈密顿力学成为量子力学的数学框架。"},
+  {n:"威尔斯特拉斯", en:"K. Weierstrass", y:"1815 – 1897", c:"德国", tag:"分析", d:"微积分严格化的完成者：一致收敛、实数构造与现代 ε-δ 语言。"},
+  {n:"戴德金", en:"R. Dedekind", y:"1831 – 1916", c:"德国", tag:"数论 / 代数", d:"以戴德金切割严格定义实数；理想论是抽象代数与代数数论的先声。"},
+  {n:"克莱因", en:"F. Klein", y:"1849 – 1925", c:"德国", tag:"几何", d:"埃尔朗根纲领：用群论统一几何分类，深刻重塑 19 世纪几何观。"},
+  {n:"陈省身", en:"S.-S. Chern", y:"1911 – 2004", c:"中国", tag:"微分几何", d:"陈示性类奠基整体微分几何，20 世纪几何学最伟大的贡献之一。"},
+  {n:"香农", en:"C. Shannon", y:"1916 – 2001", c:"美国", tag:"信息论", d:"信息论奠基人：把「信息」变成可计算的量；布尔逻辑与电路的理论打通。"}
+];
+document.getElementById("legendsGrid").innerHTML = LEGENDS.map(x=>`
+  <div class="lg-item">
+    <div class="lg-name">${x.n}<span>${x.en} · ${x.y} · ${x.c}</span></div>
+    <div class="lg-d">${x.d}</div>
+    <span class="lg-tag">${x.tag}</span>
+  </div>`).join("");
 
 // 数据概览图表
 const BRANCH_FULL = {几何:"几何学",代数:"代数学",分析:"分析 / 微积分",数论:"数论",逻辑:"逻辑与基础",拓扑:"拓扑学",概率:"概率与统计",计算:"计算 / 计算机",跨领域:"跨领域"};
